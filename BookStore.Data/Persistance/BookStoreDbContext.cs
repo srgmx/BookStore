@@ -20,6 +20,14 @@ namespace BookStore.Data.Persistance
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<User>(user =>
+            {
+                user.Property(u => u.LastName).HasMaxLength(255);
+                user.Property(u => u.FirstName).HasMaxLength(255);
+            });
+            builder.Entity<Author>().Property(u => u.PenName).HasMaxLength(255);
+            builder.Entity<Book>().Property(u => u.Name).HasMaxLength(255);
         }
     }
 }
