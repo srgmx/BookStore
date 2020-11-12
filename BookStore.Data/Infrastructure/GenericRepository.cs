@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BookStore.Domain;
 using BookStore.Data.Contracts;
 using BookStore.Data.Persistance;
 using BookStore.Data.Specifications;
 
-
 namespace BookStore.Data.Infrastructure
 {
     public class GenericRepository<TEntity> : 
-        IGenericRepository<TEntity>, IDisposable where TEntity : class
+        IGenericRepository<TEntity>, IDisposable where TEntity : BaseEntity
     {
         private readonly BookStoreDbContext _context;
-        private DbSet<TEntity> _entities;
+        private readonly DbSet<TEntity> _entities;
         private bool isDisposed;
 
         public GenericRepository(BookStoreDbContext context)
@@ -31,12 +31,12 @@ namespace BookStore.Data.Infrastructure
             return entity;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification = null)
         {
             return await this.ApplySpecification(specification).ToListAsync();
         }
 
-        public async Task<TEntity> FindAsync(ISpecification<TEntity> specification)
+        public async Task<TEntity> FindAsync(ISpecification<TEntity> specification = null)
         {
             return await this.ApplySpecification(specification).FirstOrDefaultAsync();
         }
@@ -56,6 +56,8 @@ namespace BookStore.Data.Infrastructure
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
+            var entityInDb = await this.FindByIdAsync(entity.Id);
+            _context.Entry(entityInDb).State = EntityState.Detached;
             _entities.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -84,6 +86,9 @@ namespace BookStore.Data.Infrastructure
 
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
         {
+            if (specification == null)
+                return _entities;
+
             return SpecificationEvaluator<TEntity>
                 .GetQuery(_entities.AsQueryable(), specification);
         }

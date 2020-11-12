@@ -1,10 +1,11 @@
 ﻿using BookStore.Data.Contracts;
+using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace BookStore.Data.Specifications
 {
-    public class SpecificationEvaluator<T> where T: class
+    public class SpecificationEvaluator<T> where T: BaseEntity
     {
         public static IQueryable<T> GetQuery(
             IQueryable<T> inputQuery,
