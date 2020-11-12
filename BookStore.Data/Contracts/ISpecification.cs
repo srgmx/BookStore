@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace BookStore.Data.Contract
+namespace BookStore.Data.Contracts
 {
     public interface ISpecification<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookStore.Data.Contract
+namespace BookStore.Data.Contracts
 {
     public interface IGenericRepository<T> where T: class
     {

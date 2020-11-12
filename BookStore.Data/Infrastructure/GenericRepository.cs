@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using BookStore.Data.Contract;
+using BookStore.Data.Contracts;
 using BookStore.Data.Persistance;
 using BookStore.Data.Specifications;
 
