@@ -2,6 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BookStore.Business.Contracts;
+using BookStore.Business.Mapping;
+using BookStore.Business.Services;
+using BookStore.Data.Contracts;
+using BookStore.Data.Infrastructure;
 using BookStore.Data.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +34,10 @@ namespace BookStore.API
         {
             services.AddDbContext<BookStoreDbContext>(o => 
                 o.UseSqlServer(_config.GetConnectionString("BookStoreDb")));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUserService, UserService>();
+            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,15 +48,11 @@ namespace BookStore.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
