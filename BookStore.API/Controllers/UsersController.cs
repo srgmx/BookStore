@@ -41,7 +41,8 @@ namespace BookStore.API.Controllers
         public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserDto user)
         {
             var newUser = await _userService.AddUserAsync(user);
-            return this.Ok(newUser);
+            string newPath = $"{Request.Path}{newUser.Id}";
+            return this.Created(newPath, newUser);
         }
 
         // PUT api/users/1
