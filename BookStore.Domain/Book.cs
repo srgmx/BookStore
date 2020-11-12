@@ -2,7 +2,7 @@
 
 namespace BookStore.Domain
 {
-    public class Book
+    public class Book: BaseEntity
     {
         public Book()
         {
