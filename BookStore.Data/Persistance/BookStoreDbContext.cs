@@ -1,6 +1,5 @@
 ﻿using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
 namespace BookStore.Data.Persistance
 {
