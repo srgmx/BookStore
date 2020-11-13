@@ -36,6 +36,7 @@ namespace BookStore.API
                 o.UseSqlServer(_config.GetConnectionString("BookStoreDb")));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthorService, AuthorService>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddControllers();
         }
