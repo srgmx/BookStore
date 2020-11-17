@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.Business.Contracts;
 using BookStore.Business.Mapping;
@@ -11,7 +7,6 @@ using BookStore.Data.Infrastructure;
 using BookStore.Data.Persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,9 +30,12 @@ namespace BookStore.API
             services.AddDbContext<BookStoreDbContext>(o => 
                 o.UseSqlServer(_config.GetConnectionString("BookStoreDb")));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
+
             services.AddAutoMapper(typeof(MappingProfile));
+
             services.AddControllers();
         }
 

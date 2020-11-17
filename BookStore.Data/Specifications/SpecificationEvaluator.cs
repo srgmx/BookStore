@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace BookStore.Data.Specifications
 {
-    public class SpecificationEvaluator<T> where T: BaseEntity
+    public class SpecificationEvaluator<T> where T : BaseEntity
     {
         public static IQueryable<T> GetQuery(
-            IQueryable<T> inputQuery,
+            IQueryable<T> inputQuery, 
             ISpecification<T> specification
-        )
+        ) 
         {
             var query = inputQuery;
 

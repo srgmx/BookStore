@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using BookStore.Business.Contracts;
+﻿using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookStore.API.Controllers
 {
@@ -22,7 +22,8 @@ namespace BookStore.API.Controllers
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             var users = await _userService.GetUsersAsync();
-            return this.Ok(users);
+
+            return Ok(users);
         }
 
         // GET api/users/1
@@ -31,9 +32,12 @@ namespace BookStore.API.Controllers
         {
             var user = await _userService.GetUserByIdAsync(id);
 
-            if (user == null) return this.NotFound();
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-            return this.Ok(user);
+            return Ok(user);
         }
 
         // POST api/users
@@ -42,7 +46,8 @@ namespace BookStore.API.Controllers
         {
             var newUser = await _userService.AddUserAsync(user);
             string newPath = $"{Request.Path}{newUser.Id}";
-            return this.Created(newPath, newUser);
+
+            return Created(newPath, newUser);
         }
 
         // PUT api/users/1
@@ -50,12 +55,14 @@ namespace BookStore.API.Controllers
         public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserDto user)
         {
             user.Id = id;
-
             var userUpdated = await _userService.UpdateUserAsync(user);
 
-            if (userUpdated == null) return this.NotFound();
+            if (userUpdated == null)
+            {
+                return NotFound();
+            }
 
-            return this.Ok(userUpdated);
+            return Ok(userUpdated);
         }
 
         // DELETE api/users/1
@@ -64,9 +71,12 @@ namespace BookStore.API.Controllers
         {
             var userRemoved = await _userService.RemoveUserByIdAsync(id);
 
-            if (userRemoved == null) return this.NotFound();
+            if (userRemoved == null)
+            {
+                return NotFound();
+            }
 
-            return this.Ok(userRemoved);
+            return Ok(userRemoved);
         }
     }
 }

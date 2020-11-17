@@ -2,7 +2,7 @@
 
 namespace BookStore.Business.Exceptions
 {
-    public class ExistingAuthorException: Exception
+    public class ExistingAuthorException : Exception
     {
         public ExistingAuthorException()
         {

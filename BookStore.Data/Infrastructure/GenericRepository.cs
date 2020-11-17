@@ -1,21 +1,22 @@
-﻿using System;
+﻿using BookStore.Data.Contracts;
+using BookStore.Data.Persistance;
+using BookStore.Data.Specifications;
+using BookStore.Domain;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BookStore.Domain;
-using BookStore.Data.Contracts;
-using BookStore.Data.Persistance;
-using BookStore.Data.Specifications;
 
 namespace BookStore.Data.Infrastructure
 {
-    public class GenericRepository<TEntity> : 
-        IGenericRepository<TEntity>, IDisposable where TEntity : BaseEntity
+    public class GenericRepository<TEntity> :
+        IGenericRepository<TEntity>, 
+        IDisposable where TEntity : BaseEntity
     {
         private readonly BookStoreDbContext _context;
         private readonly DbSet<TEntity> _entities;
-        private bool isDisposed;
+        private bool _isDisposed;
 
         public GenericRepository(BookStoreDbContext context)
         {
@@ -33,12 +34,12 @@ namespace BookStore.Data.Infrastructure
 
         public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification = null)
         {
-            return await this.ApplySpecification(specification).ToListAsync();
+            return await ApplySpecification(specification).ToListAsync();
         }
 
         public async Task<TEntity> FindAsync(ISpecification<TEntity> specification = null)
         {
-            return await this.ApplySpecification(specification).FirstOrDefaultAsync();
+            return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
 
         public async Task<TEntity> FindByIdAsync(int id)
@@ -56,7 +57,7 @@ namespace BookStore.Data.Infrastructure
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var entityInDb = await this.FindByIdAsync(entity.Id);
+            var entityInDb = await FindByIdAsync(entity.Id);
             _context.Entry(entityInDb).State = EntityState.Detached;
             _entities.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
@@ -73,21 +74,23 @@ namespace BookStore.Data.Infrastructure
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (!_isDisposed)
             {
                 if (disposing)
                 {
                     _context.Dispose();
                 }
 
-                isDisposed = true;
+                _isDisposed = true;
             }
         }
 
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
         {
             if (specification == null)
+            {
                 return _entities;
+            }
 
             return SpecificationEvaluator<TEntity>
                 .GetQuery(_entities.AsQueryable(), specification);

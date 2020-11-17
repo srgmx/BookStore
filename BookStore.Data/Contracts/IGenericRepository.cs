@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using BookStore.Domain;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookStore.Domain;
 
 namespace BookStore.Data.Contracts
 {
-    public interface IGenericRepository<T> where T: BaseEntity
+    public interface IGenericRepository<T> where T : BaseEntity
     {
-        Task<T> FindByIdAsync(int id);
-        Task<T> FindAsync(ISpecification<T> specification = null);
         Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification = null);
+
+        Task<T> FindByIdAsync(int id);
+
+        Task<T> FindAsync(ISpecification<T> specification = null);
+
         Task<T> AddAsync(T entity);
+
         Task<T> UpdateAsync(T entity);
+
         Task<T> RemoveAsync(T entity);
     }
 }

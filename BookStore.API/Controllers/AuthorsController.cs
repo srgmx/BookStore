@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BookStore.Business.Contracts;
+﻿using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Business.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BookStore.API.Controllers
 {
@@ -30,13 +26,12 @@ namespace BookStore.API.Controllers
                 var newAuthor = await _authorService.AddAuthorAsync(author);
                 var newPath = $"{Request.Path}{newAuthor.Id}";
 
-                return this.Created(newPath, newAuthor);
+                return Created(newPath, newAuthor);
             }
-            catch(ExistingAuthorException ex)
+            catch (ExistingAuthorException e)
             {
-                return this.BadRequest(ex.Message);
+                return BadRequest(e.Message);
             }
-
         }
 
         // GET api/authors/1
@@ -45,9 +40,12 @@ namespace BookStore.API.Controllers
         {
             var author = await _authorService.GetAuthorByIdAsync(id);
 
-            if (author == null) return this.NotFound();
+            if (author == null)
+            {
+                return NotFound();
+            }
 
-            return this.Ok(author);
+            return Ok(author);
         }
     }
 }

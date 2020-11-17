@@ -5,8 +5,8 @@ namespace BookStore.Data.Persistance
 {
     public class BookStoreDbContext : DbContext
     {
-        public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
-            : base(options)
+        public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) :
+            base(options)
         {
         }
 

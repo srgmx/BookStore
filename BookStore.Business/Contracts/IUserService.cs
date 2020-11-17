@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BookStore.Business.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookStore.Business.Dto;
 
 namespace BookStore.Business.Contracts
 {
@@ -9,6 +9,7 @@ namespace BookStore.Business.Contracts
         Task<IEnumerable<UserDto>> GetUsersAsync();
 
         Task<UserDto> GetUserByIdAsync(int id);
+
         Task<UserDto> AddUserAsync(UserDto user);
 
         Task<UserDto> UpdateUserAsync(UserDto user);

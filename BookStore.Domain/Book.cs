@@ -2,11 +2,11 @@
 
 namespace BookStore.Domain
 {
-    public class Book: BaseEntity
+    public class Book : BaseEntity
     {
         public Book()
         {
-            this.Authors = new List<Author>();
+            Authors = new List<Author>();
         }
 
         public string Name { get; set; }

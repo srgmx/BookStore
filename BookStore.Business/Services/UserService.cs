@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using BookStore.Domain;
-using BookStore.Data.Contracts;
+﻿using AutoMapper;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-
+using BookStore.Data.Contracts;
+using BookStore.Domain;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookStore.Business.Services
 {
@@ -14,7 +13,10 @@ namespace BookStore.Business.Services
         private readonly IGenericRepository<User> _userRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IGenericRepository<User> userRepository, IMapper mapper)
+        public UserService(
+            IGenericRepository<User> userRepository,
+            IMapper mapper
+        )
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -47,7 +49,10 @@ namespace BookStore.Business.Services
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
 
-            if (userInDb == null) return null;
+            if (userInDb == null)
+            {
+                return null;
+            }
 
             var userRemoved = await _userRepository.RemoveAsync(userInDb);
 
@@ -58,7 +63,10 @@ namespace BookStore.Business.Services
         {
             var userInDb = await _userRepository.FindByIdAsync(user.Id);
 
-            if (userInDb == null) return null;
+            if (userInDb == null)
+            {
+                return null;
+            }
 
             var userToUpdate = _mapper.Map<UserDto, User>(user);
             await _userRepository.UpdateAsync(userToUpdate);

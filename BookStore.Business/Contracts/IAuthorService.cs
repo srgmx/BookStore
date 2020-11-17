@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using BookStore.Business.Dto;
+﻿using BookStore.Business.Dto;
+using System.Threading.Tasks;
 
 namespace BookStore.Business.Contracts
 {

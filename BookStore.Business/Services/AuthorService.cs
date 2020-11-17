@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Services
 {
-    public class AuthorService: IAuthorService
+    public class AuthorService : IAuthorService
     {
         private readonly IGenericRepository<Author> _authorRepository;
         private readonly IMapper _mapper;
 
         public AuthorService(
-            IGenericRepository<Author> authorRepository,
+            IGenericRepository<Author> authorRepository, 
             IMapper mapper
         )
         {
@@ -27,15 +27,17 @@ namespace BookStore.Business.Services
         {
             var authorByUserIdSpec = new AuthorByUserIdSpecification(author.UserId);
             var authorInDb = await _authorRepository.FindAsync(authorByUserIdSpec);
-            if(authorInDb != null)
+
+            if (authorInDb != null)
             {
                 string message = $"User with UserId={author.UserId} is an author already.";
+
                 throw new ExistingAuthorException(message);
             }
 
             var authorToAdd = _mapper.Map<AuthorToAddDto, Author>(author);
             authorInDb = await _authorRepository.AddAsync(authorToAdd);
-            var authorToReturn = await this.GetAuthorByIdAsync(authorInDb.Id);
+            var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
 
             return authorToReturn;
         }
