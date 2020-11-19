@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
+using BookStore.Business.Exceptions;
 using BookStore.Data.Contracts;
 using BookStore.Domain;
 using System;
@@ -46,18 +47,18 @@ namespace BookStore.Business.Services
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> RemoveUserByIdAsync(Guid id)
+        public async Task<bool> RemoveUserByIdAsync(Guid id)
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
 
             if (userInDb == null)
             {
-                return null;
+                throw new RecordNotFoundException("Item was not found in the database");
             }
 
-            var userRemoved = await _userRepository.RemoveAsync(userInDb);
+            await _userRepository.RemoveAsync(userInDb);
 
-            return _mapper.Map<User, UserDto>(userRemoved);
+            return true;
         }
 
         public async Task<UserDto> UpdateUserAsync(UserDto user)

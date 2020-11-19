@@ -1,5 +1,6 @@
 ﻿using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
+using BookStore.Business.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -70,14 +71,16 @@ namespace BookStore.API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserDto>> DeleteUser(Guid id)
         {
-            var userRemoved = await _userService.RemoveUserByIdAsync(id);
-
-            if (userRemoved == null)
+            try
             {
-                return NotFound();
+                await _userService.RemoveUserByIdAsync(id);
+            }
+            catch (RecordNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
 
-            return Ok(userRemoved);
+            return Ok();
         }
     }
 }

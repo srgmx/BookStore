@@ -47,12 +47,12 @@ namespace BookStore.Data.Infrastructure
             return await _entities.FindAsync(id);
         }
 
-        public async Task<TEntity> RemoveAsync(TEntity entity)
+        public async Task<bool> RemoveAsync(TEntity entity)
         {
             _entities.Remove(entity);
             await _context.SaveChangesAsync();
 
-            return entity;
+            return true;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)

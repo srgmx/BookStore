@@ -15,6 +15,6 @@ namespace BookStore.Business.Contracts
 
         Task<UserDto> UpdateUserAsync(UserDto user);
 
-        Task<UserDto> RemoveUserByIdAsync(Guid id);
+        Task<bool> RemoveUserByIdAsync(Guid id);
     }
 }
