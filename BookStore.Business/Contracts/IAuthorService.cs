@@ -1,4 +1,5 @@
 ﻿using BookStore.Business.Dto;
+using System;
 using System.Threading.Tasks;
 
 namespace BookStore.Business.Contracts
@@ -7,6 +8,6 @@ namespace BookStore.Business.Contracts
     {
         Task<AuthorDto> AddAuthorAsync(AuthorToAddDto author);
 
-        Task<AuthorDto> GetAuthorByIdAsync(int id);
+        Task<AuthorDto> GetAuthorByIdAsync(Guid id);
     }
 }

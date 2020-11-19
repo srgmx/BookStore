@@ -3,6 +3,7 @@ using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Data.Contracts;
 using BookStore.Domain;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace BookStore.Business.Services
             return user;
         }
 
-        public async Task<UserDto> GetUserByIdAsync(int id)
+        public async Task<UserDto> GetUserByIdAsync(Guid id)
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
 
@@ -45,7 +46,7 @@ namespace BookStore.Business.Services
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
         }
 
-        public async Task<UserDto> RemoveUserByIdAsync(int id)
+        public async Task<UserDto> RemoveUserByIdAsync(Guid id)
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
 

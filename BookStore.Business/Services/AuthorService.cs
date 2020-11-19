@@ -5,6 +5,7 @@ using BookStore.Business.Exceptions;
 using BookStore.Data.Contracts;
 using BookStore.Data.Specifications;
 using BookStore.Domain;
+using System;
 using System.Threading.Tasks;
 
 namespace BookStore.Business.Services
@@ -42,7 +43,7 @@ namespace BookStore.Business.Services
             return authorToReturn;
         }
 
-        public async Task<AuthorDto> GetAuthorByIdAsync(int id)
+        public async Task<AuthorDto> GetAuthorByIdAsync(Guid id)
         {
             var authorWithUserInfoSpec = new AuthorWithUserInfoSpecification(id);
             var authorInDb = await _authorRepository.FindAsync(authorWithUserInfoSpec);

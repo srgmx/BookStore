@@ -1,4 +1,5 @@
 ﻿using BookStore.Domain;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace BookStore.Data.Contracts
     {
         Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification = null);
 
-        Task<T> FindByIdAsync(int id);
+        Task<T> FindByIdAsync(Guid id);
 
         Task<T> FindAsync(ISpecification<T> specification = null);
 

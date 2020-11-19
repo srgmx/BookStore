@@ -1,6 +1,7 @@
 ﻿using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace BookStore.API.Controllers
 
         // GET api/users/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUserAsync(int id)
+        public async Task<ActionResult<UserDto>> GetUserAsync(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
 
@@ -52,7 +53,7 @@ namespace BookStore.API.Controllers
 
         // PUT api/users/1
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] UserDto user)
+        public async Task<ActionResult<UserDto>> UpdateUser(Guid id, [FromBody] UserDto user)
         {
             user.Id = id;
             var userUpdated = await _userService.UpdateUserAsync(user);
@@ -67,7 +68,7 @@ namespace BookStore.API.Controllers
 
         // DELETE api/users/1
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserDto>> DeleteUser(int id)
+        public async Task<ActionResult<UserDto>> DeleteUser(Guid id)
         {
             var userRemoved = await _userService.RemoveUserByIdAsync(id);
 

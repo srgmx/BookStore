@@ -42,7 +42,7 @@ namespace BookStore.Data.Infrastructure
             return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
 
-        public async Task<TEntity> FindByIdAsync(int id)
+        public async Task<TEntity> FindByIdAsync(Guid id)
         {
             return await _entities.FindAsync(id);
         }

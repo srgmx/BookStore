@@ -1,8 +1,10 @@
-﻿namespace BookStore.Business.Dto
+﻿using System;
+
+namespace BookStore.Business.Dto
 {
     public class AuthorToAddDto
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public string PenName { get; set; }
     }

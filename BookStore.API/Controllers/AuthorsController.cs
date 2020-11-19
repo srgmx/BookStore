@@ -2,6 +2,7 @@
 using BookStore.Business.Dto;
 using BookStore.Business.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace BookStore.API.Controllers
@@ -36,7 +37,7 @@ namespace BookStore.API.Controllers
 
         // GET api/authors/1
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync(int id)
+        public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync(Guid id)
         {
             var author = await _authorService.GetAuthorByIdAsync(id);
 
