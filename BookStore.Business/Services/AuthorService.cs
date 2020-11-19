@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-using BookStore.Business.Exceptions;
 using BookStore.Data.Contracts;
 using BookStore.Data.Specifications;
 using BookStore.Domain;
+using BookStore.Domain.Exceptions;
 using System;
 using System.Threading.Tasks;
 

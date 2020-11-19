@@ -1,6 +1,6 @@
 ﻿using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-using BookStore.Business.Exceptions;
+using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

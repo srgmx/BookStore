@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookStore.Business.Exceptions
+namespace BookStore.Domain.Exceptions
 {
     public class ExistingAuthorException : Exception
     {
