@@ -1,7 +1,9 @@
-﻿namespace BookStore.Domain
+﻿using System;
+
+namespace BookStore.Domain
 {
     public class BaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BookStore.Domain
 {
@@ -11,7 +12,7 @@ namespace BookStore.Domain
 
         public string PenName { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public User User { get; set; }
 
