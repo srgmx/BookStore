@@ -1,13 +1,6 @@
-using AutoMapper;
-using BookStore.Business.Contracts;
-using BookStore.Business.Mapping;
-using BookStore.Business.Services;
-using BookStore.Data.Contracts;
-using BookStore.Data.Infrastructure;
-using BookStore.Data.Persistance;
+using BookStore.API.Extentions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,15 +20,10 @@ namespace BookStore.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BookStoreDbContext>(o => 
-                o.UseSqlServer(_config.GetConnectionString("BookStoreDb")));
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthorService, AuthorService>();
-
-            services.AddAutoMapper(typeof(MappingProfile));
-
+            services.AddDatabaseContexts(_config);
+            services.AddRepositories();
+            services.AddBusinessServices();
+            services.AddMapping();
             services.AddControllers();
         }
 
