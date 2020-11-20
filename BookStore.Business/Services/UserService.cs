@@ -36,6 +36,7 @@ namespace BookStore.Business.Services
         public async Task<UserDto> GetUserByIdAsync(Guid id)
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
+            CheckUserExists(userInDb);
 
             return _mapper.Map<User, UserDto>(userInDb);
         }
@@ -50,12 +51,7 @@ namespace BookStore.Business.Services
         public async Task<bool> RemoveUserByIdAsync(Guid id)
         {
             var userInDb = await _userRepository.FindByIdAsync(id);
-
-            if (userInDb == null)
-            {
-                throw new RecordNotFoundException("Item was not found in the database");
-            }
-
+            CheckUserExists(userInDb);
             await _userRepository.RemoveAsync(userInDb);
 
             return true;
@@ -64,16 +60,19 @@ namespace BookStore.Business.Services
         public async Task<UserDto> UpdateUserAsync(UserDto user)
         {
             var userInDb = await _userRepository.FindByIdAsync(user.Id);
-
-            if (userInDb == null)
-            {
-                return null;
-            }
-
+            CheckUserExists(userInDb);
             var userToUpdate = _mapper.Map<UserDto, User>(user);
             await _userRepository.UpdateAsync(userToUpdate);
             
             return user; 
+        }
+
+        private void CheckUserExists(User user)
+        {
+            if (user == null)
+            {
+                throw new RecordNotFoundException();
+            }
         }
     }
 }

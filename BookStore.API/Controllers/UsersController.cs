@@ -32,14 +32,16 @@ namespace BookStore.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserAsync(Guid id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
 
-            if (user == null)
+                return Ok(user);
+            }
+            catch (RecordNotFoundException)
             {
                 return NotFound();
             }
-
-            return Ok(user);
         }
 
         // POST api/users
@@ -56,15 +58,17 @@ namespace BookStore.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> UpdateUser(Guid id, [FromBody] UserDto user)
         {
-            user.Id = id;
-            var userUpdated = await _userService.UpdateUserAsync(user);
+            try
+            {
+                user.Id = id;
+                var userUpdated = await _userService.UpdateUserAsync(user);
 
-            if (userUpdated == null)
+                return Ok(userUpdated);
+            }
+            catch (RecordNotFoundException)
             {
                 return NotFound();
             }
-
-            return Ok(userUpdated);
         }
 
         // DELETE api/users/1
@@ -74,13 +78,13 @@ namespace BookStore.API.Controllers
             try
             {
                 await _userService.RemoveUserByIdAsync(id);
-            }
-            catch (RecordNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
 
-            return Ok();
+                return Ok();
+            }
+            catch (RecordNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }
