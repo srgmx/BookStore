@@ -35,7 +35,7 @@ namespace BookStore.Business.Services
 
         public async Task<UserDto> GetUserByIdAsync(Guid id)
         {
-            var userInDb = await _userRepository.FindByIdAsync(id);
+            var userInDb = await _userRepository.GetByIdAsync(id);
             CheckUserExists(userInDb);
 
             return _mapper.Map<User, UserDto>(userInDb);
@@ -43,14 +43,14 @@ namespace BookStore.Business.Services
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _userRepository.FindAllAsync();
+            var users = await _userRepository.GetAllAsync();
 
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
         }
 
         public async Task<bool> RemoveUserByIdAsync(Guid id)
         {
-            var userInDb = await _userRepository.FindByIdAsync(id);
+            var userInDb = await _userRepository.GetByIdAsync(id);
             CheckUserExists(userInDb);
             await _userRepository.RemoveAsync(userInDb);
 
@@ -59,7 +59,7 @@ namespace BookStore.Business.Services
 
         public async Task<UserDto> UpdateUserAsync(UserDto user)
         {
-            var userInDb = await _userRepository.FindByIdAsync(user.Id);
+            var userInDb = await _userRepository.GetByIdAsync(user.Id);
             CheckUserExists(userInDb);
             var userToUpdate = _mapper.Map<UserDto, User>(user);
             await _userRepository.UpdateAsync(userToUpdate);

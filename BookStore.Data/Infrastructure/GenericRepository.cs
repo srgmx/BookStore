@@ -32,7 +32,7 @@ namespace BookStore.Data.Infrastructure
             return entity;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(ISpecification<TEntity> specification = null)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification = null)
         {
             return await ApplySpecification(specification).ToListAsync();
         }
@@ -42,7 +42,7 @@ namespace BookStore.Data.Infrastructure
             return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
 
-        public async Task<TEntity> FindByIdAsync(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
             return await _entities.FindAsync(id);
         }
@@ -57,7 +57,7 @@ namespace BookStore.Data.Infrastructure
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var entityInDb = await FindByIdAsync(entity.Id);
+            var entityInDb = await GetByIdAsync(entity.Id);
             _context.Entry(entityInDb).State = EntityState.Detached;
             _entities.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;

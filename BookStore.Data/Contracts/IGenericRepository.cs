@@ -7,9 +7,9 @@ namespace BookStore.Data.Contracts
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> FindAllAsync(ISpecification<T> specification = null);
+        Task<IEnumerable<T>> GetAllAsync(ISpecification<T> specification = null);
 
-        Task<T> FindByIdAsync(Guid id);
+        Task<T> GetByIdAsync(Guid id);
 
         Task<T> FindAsync(ISpecification<T> specification = null);
 
