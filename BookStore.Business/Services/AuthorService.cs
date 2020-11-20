@@ -12,11 +12,11 @@ namespace BookStore.Business.Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IGenericRepository<Author> _authorRepository;
+        private readonly IAuthorRepository _authorRepository;
         private readonly IMapper _mapper;
 
         public AuthorService(
-            IGenericRepository<Author> authorRepository, 
+            IAuthorRepository authorRepository, 
             IMapper mapper
         )
         {

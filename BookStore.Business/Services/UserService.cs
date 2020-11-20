@@ -12,11 +12,11 @@ namespace BookStore.Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly IGenericRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
         public UserService(
-            IGenericRepository<User> userRepository,
+            IUserRepository userRepository,
             IMapper mapper
         )
         {
