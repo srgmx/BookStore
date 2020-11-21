@@ -24,6 +24,7 @@ namespace BookStore.API
             services.AddDataInfrastrucure();
             services.AddBusinessServices();
             services.AddMapping();
+            services.AddSwagger();
             services.AddControllers();
         }
 
@@ -36,9 +37,8 @@ namespace BookStore.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSwaggerTooling();
             app.UseRouting();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
