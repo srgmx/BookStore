@@ -1,4 +1,4 @@
-using BookStore.API.Extentions;
+using BookStore.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,8 +20,8 @@ namespace BookStore.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDatabaseContexts(_config);
-            services.AddRepositories();
+            services.AddDataPersistance(_config);
+            services.AddDataInfrastrucure();
             services.AddBusinessServices();
             services.AddMapping();
             services.AddControllers();

@@ -12,22 +12,22 @@ namespace BookStore.Business.Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IAuthorRepository _authorRepository;
+        private readonly IBookStoreUnitOfWork _bookStoreUnitOfWork;
         private readonly IMapper _mapper;
 
         public AuthorService(
-            IAuthorRepository authorRepository, 
+            IBookStoreUnitOfWork bookStore, 
             IMapper mapper
         )
         {
-            _authorRepository = authorRepository;
+            _bookStoreUnitOfWork = bookStore;
             _mapper = mapper;
         }
 
         public async Task<AuthorDto> AddAuthorAsync(AuthorToAddDto author)
         {
             var authorByUserIdSpec = new AuthorByUserIdSpecification(author.UserId);
-            var authorInDb = await _authorRepository.FindAsync(authorByUserIdSpec);
+            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.FindAsync(authorByUserIdSpec);
 
             if (authorInDb != null)
             {
@@ -37,7 +37,8 @@ namespace BookStore.Business.Services
             }
 
             var authorToAdd = _mapper.Map<AuthorToAddDto, Author>(author);
-            authorInDb = await _authorRepository.AddAsync(authorToAdd);
+            authorInDb = await _bookStoreUnitOfWork.AuthorRepository.AddAsync(authorToAdd);
+            await _bookStoreUnitOfWork.SaveAsync();
             var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
 
             return authorToReturn;
@@ -46,7 +47,7 @@ namespace BookStore.Business.Services
         public async Task<AuthorDto> GetAuthorByIdAsync(Guid id)
         {
             var authorWithUserInfoSpec = new AuthorWithUserInfoSpecification(id);
-            var authorInDb = await _authorRepository.FindAsync(authorWithUserInfoSpec);
+            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.FindAsync(authorWithUserInfoSpec);
             var authorToReturn = _mapper.Map<Author, AuthorDto>(authorInDb);
 
             return authorToReturn;

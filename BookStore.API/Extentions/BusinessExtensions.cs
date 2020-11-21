@@ -2,9 +2,9 @@
 using BookStore.Business.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookStore.API.Extentions
+namespace BookStore.API.Extensions
 {
-    public static class BusinessExtentions
+    public static class BusinessExtensions
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {

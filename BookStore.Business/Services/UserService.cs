@@ -12,22 +12,23 @@ namespace BookStore.Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IBookStoreUnitOfWork _bookStoreUnitOfWork;
         private readonly IMapper _mapper;
 
         public UserService(
-            IUserRepository userRepository,
+            IBookStoreUnitOfWork bookStoreUnitOfWork,
             IMapper mapper
         )
         {
-            _userRepository = userRepository;
+            _bookStoreUnitOfWork = bookStoreUnitOfWork;
             _mapper = mapper;
         }
 
         public async Task<UserDto> AddUserAsync(UserDto user)
         {
             var userToAdd = _mapper.Map<UserDto, User>(user);
-            var userInDb = await _userRepository.AddAsync(userToAdd);
+            var userInDb = await _bookStoreUnitOfWork.UserRepository.AddAsync(userToAdd);
+            await _bookStoreUnitOfWork.SaveAsync();
             user.Id = userInDb.Id;
 
             return user;
@@ -35,7 +36,7 @@ namespace BookStore.Business.Services
 
         public async Task<UserDto> GetUserByIdAsync(Guid id)
         {
-            var userInDb = await _userRepository.GetByIdAsync(id);
+            var userInDb = await _bookStoreUnitOfWork.UserRepository.GetByIdAsync(id);
             CheckUserExists(userInDb);
 
             return _mapper.Map<User, UserDto>(userInDb);
@@ -43,27 +44,29 @@ namespace BookStore.Business.Services
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _bookStoreUnitOfWork.UserRepository.GetAllAsync();
 
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(users);
         }
 
         public async Task<bool> RemoveUserByIdAsync(Guid id)
         {
-            var userInDb = await _userRepository.GetByIdAsync(id);
+            var userInDb = await _bookStoreUnitOfWork.UserRepository.GetByIdAsync(id);
             CheckUserExists(userInDb);
-            await _userRepository.RemoveAsync(userInDb);
+            _bookStoreUnitOfWork.UserRepository.RemoveAsync(userInDb);
+            await _bookStoreUnitOfWork.SaveAsync();
 
             return true;
         }
 
         public async Task<UserDto> UpdateUserAsync(UserDto user)
         {
-            var userInDb = await _userRepository.GetByIdAsync(user.Id);
+            var userInDb = await _bookStoreUnitOfWork.UserRepository.GetByIdAsync(user.Id);
             CheckUserExists(userInDb);
             var userToUpdate = _mapper.Map<UserDto, User>(user);
-            await _userRepository.UpdateAsync(userToUpdate);
-            
+            await _bookStoreUnitOfWork.UserRepository.UpdateAsync(userToUpdate);
+            await _bookStoreUnitOfWork.SaveAsync();
+
             return user; 
         }
 

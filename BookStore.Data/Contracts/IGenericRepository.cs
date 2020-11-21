@@ -17,6 +17,6 @@ namespace BookStore.Data.Contracts
 
         Task<T> UpdateAsync(T entity);
 
-        Task<bool> RemoveAsync(T entity);
+        void RemoveAsync(T entity);
     }
 }

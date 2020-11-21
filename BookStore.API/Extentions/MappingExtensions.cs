@@ -2,9 +2,9 @@
 using BookStore.Business.Mapping;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookStore.API.Extentions
+namespace BookStore.API.Extensions
 {
-    public static class MappingExtentions
+    public static class MappingExtensions
     {
         public static IServiceCollection AddMapping(this IServiceCollection services)
         {
