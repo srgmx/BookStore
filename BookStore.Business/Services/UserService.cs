@@ -64,10 +64,11 @@ namespace BookStore.Business.Services
             var userInDb = await _bookStoreUnitOfWork.UserRepository.GetByIdAsync(user.Id);
             CheckUserExists(userInDb);
             var userToUpdate = _mapper.Map<UserDto, User>(user);
-            await _bookStoreUnitOfWork.UserRepository.UpdateAsync(userToUpdate);
+            userInDb = await _bookStoreUnitOfWork.UserRepository.UpdateAsync(userToUpdate);
             await _bookStoreUnitOfWork.SaveAsync();
+            var userToReturn = _mapper.Map<User, UserDto>(userInDb);
 
-            return user; 
+            return userToReturn; 
         }
 
         private void CheckUserExists(User user)

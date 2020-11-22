@@ -48,25 +48,41 @@ namespace BookStore.Data.Infrastructure
             _entities.Remove(entity);
         }
 
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
+            // Step 1: Get existing entry
             var entityInDb = await GetByIdAsync(entity.Id);
+            // Step 2: Set modification
+            var entityToReturn = SetModification(entityInDb, entity);
+
+            return entityToReturn;
+        }
+
+        /// <summary>
+        /// Sets an entity update logic, maps properties for update.
+        /// Must return result updated entity.
+        /// </summary>
+        /// <param name="entityInDb">Entity is existed in the database.</param>
+        /// <param name="entity">Entity contains propeties with updated values.</param>
+        /// <returns>Result entity with updated properties.</returns>
+        protected virtual TEntity SetModification(TEntity entityInDb, TEntity entity)
+        {
             _context.Entry(entityInDb).State = EntityState.Detached;
-            _entities.Attach(entity);
+            _context.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
 
             return entity;
         }
 
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
-        {
-            if (specification == null)
             {
-                return _entities;
-            }
+                if (specification == null)
+                {
+                    return _entities;
+                }
 
-            return SpecificationEvaluator<TEntity>
-                .GetQuery(_entities.AsQueryable(), specification);
+                return SpecificationEvaluator<TEntity>
+                    .GetQuery(_entities.AsQueryable(), specification);
+            }
         }
-    }
 }
