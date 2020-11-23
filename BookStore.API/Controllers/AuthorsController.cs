@@ -18,6 +18,32 @@ namespace BookStore.API.Controllers
             _authorService = authorService;
         }
 
+        // GET api/authors/
+        [HttpGet]
+        public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync()
+        {
+            var authors = await _authorService.GetAuthorsAsync();
+
+            return Ok(authors);
+        }
+
+
+        // GET api/authors/1
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync(Guid id)
+        {
+            try
+            {
+                var author = await _authorService.GetAuthorByIdAsync(id);
+
+                return Ok(author);
+            }
+            catch (RecordNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
         // POST api/authors
         [HttpPost]
         public async Task<ActionResult<AuthorDto>> AddAuthorAsync(AuthorToAddDto author)
@@ -25,9 +51,9 @@ namespace BookStore.API.Controllers
             try
             {
                 var newAuthor = await _authorService.AddAuthorAsync(author);
-                var newPath = $"{Request.Path}{newAuthor.Id}";
+                var resourcePath = $"{Request.Path}/{newAuthor.Id}";
 
-                return Created(newPath, newAuthor);
+                return Created(resourcePath, newAuthor);
             }
             catch (ExistingAuthorException e)
             {
@@ -35,18 +61,37 @@ namespace BookStore.API.Controllers
             }
         }
 
-        // GET api/authors/1
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync(Guid id)
+        // PUT api/authors/1
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AuthorDto>> UpdateAuthorAsync(Guid id, [FromBody] AuthorToUpdateDto author)
         {
-            var author = await _authorService.GetAuthorByIdAsync(id);
+            try
+            {
+                author.Id = id;
+                var updatedAuthor = await _authorService.UpdateAuthorAsync(author);
 
-            if (author == null)
+                return Ok(updatedAuthor);
+            }
+            catch (RecordNotFoundException)
             {
                 return NotFound();
             }
+        }
 
-            return Ok(author);
+        // Delete api/authors/1
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAuthorAsync(Guid id)
+        {
+            try
+            {
+                await _authorService.RemoveAuthorAsync(id);
+
+                return Ok();
+            }
+            catch (RecordNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

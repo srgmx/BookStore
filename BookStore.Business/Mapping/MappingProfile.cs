@@ -25,6 +25,7 @@ namespace BookStore.Business.Mapping
                     o => o.MapFrom(s => s.User.Id)
                 );
             CreateMap<AuthorToAddDto, Author>();
+            CreateMap<AuthorToUpdateDto, Author>();
         }
     }
 }

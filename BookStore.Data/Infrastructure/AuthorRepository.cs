@@ -11,5 +11,13 @@ namespace BookStore.Data.Infrastructure
         {
             _context = context;
         }
+
+        protected override Author SetModification(Author entityInDb, Author entity)
+        {
+            entityInDb.PenName = entity.PenName;
+            _context.Entry(entityInDb).Property(e => e.PenName).IsModified = true;
+
+            return entityInDb;
+        }
     }
 }
