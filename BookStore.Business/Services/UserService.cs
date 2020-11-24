@@ -53,7 +53,7 @@ namespace BookStore.Business.Services
         {
             var userInDb = await _bookStoreUnitOfWork.UserRepository.GetByIdAsync(id);
             CheckUserExists(userInDb);
-            _bookStoreUnitOfWork.UserRepository.RemoveAsync(userInDb);
+            _bookStoreUnitOfWork.UserRepository.Remove(userInDb);
             await _bookStoreUnitOfWork.SaveAsync();
 
             return true;

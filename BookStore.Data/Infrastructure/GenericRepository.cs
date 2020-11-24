@@ -43,7 +43,7 @@ namespace BookStore.Data.Infrastructure
             return await _entities.FindAsync(id);
         }
 
-        public virtual void RemoveAsync(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             _entities.Remove(entity);
         }

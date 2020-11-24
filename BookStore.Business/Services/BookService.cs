@@ -75,7 +75,7 @@ namespace BookStore.Business.Services
             var specification = new BookWithAuthorsSpecification(id);
             var book = await _bookStoreUnitOfWork.BookRepository.FindAsync(specification);
             CheckBookExists(book);
-            _bookStoreUnitOfWork.BookRepository.RemoveAsync(book);
+            _bookStoreUnitOfWork.BookRepository.Remove(book);
             await _bookStoreUnitOfWork.SaveAsync();
 
             return true;

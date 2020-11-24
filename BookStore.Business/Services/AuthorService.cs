@@ -80,7 +80,7 @@ namespace BookStore.Business.Services
         {
             var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.GetByIdAsync(id);
             CheckAuthorExists(authorInDb);
-            _bookStoreUnitOfWork.AuthorRepository.RemoveAsync(authorInDb);
+            _bookStoreUnitOfWork.AuthorRepository.Remove(authorInDb);
             await _bookStoreUnitOfWork.SaveAsync();
 
             return true;
