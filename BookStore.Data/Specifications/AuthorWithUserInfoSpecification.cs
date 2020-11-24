@@ -7,11 +7,16 @@ namespace BookStore.Data.Specifications
     {
         public AuthorWithUserInfoSpecification() : base()
         {
-            AddInclude(a => a.User);
+            ConfigureInclude();
         }
 
         public AuthorWithUserInfoSpecification(Guid authorId) :
             base(u => u.Id == authorId)
+        {
+            ConfigureInclude();
+        }
+
+        private void ConfigureInclude()
         {
             AddInclude(a => a.User);
         }
