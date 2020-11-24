@@ -6,6 +6,7 @@ using BookStore.Data.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,6 +24,13 @@ namespace BookStore.Business.Services
         {
             _bookStoreUnitOfWork = bookStoreUnitOfWork;
             _mapper = mapper;
+        }
+        public async Task<IEnumerable<BookDto>> GetBooksAsync()
+        {
+            var specification = new BookWithAuthorsSpecification();
+            var books = await _bookStoreUnitOfWork.BookRepository.GetAllAsync(specification);
+
+            return _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(books);
         }
 
         public async Task<BookDto> GetBookAsync(Guid id)
@@ -60,6 +68,17 @@ namespace BookStore.Business.Services
             {
                 throw new RecordNotFoundException();
             }
+        }
+
+        public async Task<bool> RemoveBookAsync(Guid id)
+        {
+            var specification = new BookWithAuthorsSpecification(id);
+            var book = await _bookStoreUnitOfWork.BookRepository.FindAsync(specification);
+            CheckBookExists(book);
+            _bookStoreUnitOfWork.BookRepository.RemoveAsync(book);
+            await _bookStoreUnitOfWork.SaveAsync();
+
+            return true;
         }
     }
 }

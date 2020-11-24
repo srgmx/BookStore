@@ -3,6 +3,7 @@ using BookStore.Business.Dto;
 using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookStore.API.Controllers
@@ -18,9 +19,18 @@ namespace BookStore.API.Controllers
             _bookService = bookService;
         }
 
+        // GET api/books/
+        [HttpGet()]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooksAsync()
+        {
+            var books = await _bookService.GetBooksAsync();
+
+            return Ok(books);
+        }
+
         // GET api/books/1
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetBookAsync(Guid id)
+        public async Task<ActionResult<BookDto>> GetBookAsync(Guid id)
         {
             try
             {
@@ -36,7 +46,7 @@ namespace BookStore.API.Controllers
 
         // POST api/books
         [HttpPost]
-        public async Task<ActionResult> CreateBook([FromBody] BookToAddDto book)
+        public async Task<ActionResult<BookDto>> CreateBook([FromBody] BookToAddDto book)
         {
             try
             {
@@ -48,6 +58,22 @@ namespace BookStore.API.Controllers
             catch (InvalidAuthorsException)
             {
                 return BadRequest("Add author first.");
+            }
+        }
+
+        // DELETE api/books/1
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteBookAsync(Guid id)
+        {
+            try
+            {
+                var book = await _bookService.RemoveBookAsync(id);
+
+                return Ok();
+            }
+            catch (RecordNotFoundException)
+            {
+                return NotFound();
             }
         }
     }
