@@ -22,12 +22,7 @@ namespace BookStore.Data.Infrastructure
         {
             get
             {
-                if (_userRepository == null)
-                {
-                    _userRepository = new UserRepository(_context);
-                }
-
-                return _userRepository;
+                return _userRepository ?? new UserRepository(_context);
             }
         }
 
@@ -35,12 +30,7 @@ namespace BookStore.Data.Infrastructure
         {
             get
             {
-                if (_authorRepository == null)
-                {
-                    _authorRepository = new AuthorRepository(_context);
-                }
-
-                return _authorRepository;
+                return _authorRepository ?? new AuthorRepository(_context);
             }
         }
 
@@ -48,12 +38,7 @@ namespace BookStore.Data.Infrastructure
         {
             get
             {
-                if (_bookRepopository == null)
-                {
-                    _bookRepopository = new BookRepository(_context);
-                }
-
-                return _bookRepopository;
+                return _bookRepopository ?? new BookRepository(_context);
             }
         }
 
