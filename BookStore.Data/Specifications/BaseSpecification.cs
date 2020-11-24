@@ -21,9 +21,17 @@ namespace BookStore.Data.Specifications
         public List<Expression<Func<T, object>>> Includes { get; } =
             new List<Expression<Func<T, object>>>();
 
+        public List<string> IncludeStrings { get; } =
+            new List<string>();
+
         protected virtual void AddInclude(Expression<Func<T, object>> expression)
         {
             Includes.Add(expression);
+        }
+
+        protected virtual void AddInclude(string includeString)
+        {
+            IncludeStrings.Add(includeString);
         }
     }
 }
