@@ -8,6 +8,8 @@ namespace BookStore.Data.Contracts
 
         IAuthorRepository AuthorRepository { get; }
 
+        IBookRepopository BookRepository { get; }
+
         Task SaveAsync(); 
     }
 }

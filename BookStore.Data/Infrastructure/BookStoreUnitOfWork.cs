@@ -9,6 +9,7 @@ namespace BookStore.Data.Infrastructure
     {
         private IUserRepository _userRepository;
         private IAuthorRepository _authorRepository;
+        private IBookRepopository _bookRepopository;
         private readonly BookStoreDbContext _context;
         private bool _isDisposed;
 
@@ -40,6 +41,19 @@ namespace BookStore.Data.Infrastructure
                 }
 
                 return _authorRepository;
+            }
+        }
+
+        public IBookRepopository BookRepository
+        {
+            get
+            {
+                if (_bookRepopository == null)
+                {
+                    _bookRepopository = new BookRepository(_context);
+                }
+
+                return _bookRepopository;
             }
         }
 

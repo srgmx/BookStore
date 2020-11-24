@@ -10,6 +10,7 @@ namespace BookStore.API.Extensions
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IBookService, BookService>();
 
             return services;
         }

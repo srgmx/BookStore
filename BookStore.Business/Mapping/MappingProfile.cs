@@ -26,6 +26,13 @@ namespace BookStore.Business.Mapping
                 );
             CreateMap<AuthorToAddDto, Author>();
             CreateMap<AuthorToUpdateDto, Author>();
+
+            CreateMap<BookToAddDto, Book>()
+                .ForMember(
+                    d => d.Authors, 
+                    o => o.Ignore()
+                 );
+            CreateMap<Book, BookDto>();
         }
     }
 }

@@ -74,7 +74,7 @@ namespace BookStore.Data.Infrastructure
             return entity;
         }
 
-        private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
+        protected IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
             {
                 if (specification == null)
                 {
