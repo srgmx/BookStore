@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
 
 namespace BookStore.API
 {
@@ -13,14 +11,48 @@ namespace BookStore.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            ConfigureSeriLog();
+
+            try
+            {
+                Log.Information("API is starting up...");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "API failed on the start-up");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static void ConfigureSeriLog()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    new RenderedCompactJsonFormatter(),
+                    "Logs//Errors//BookStoreAPI-Activities-.log",
+                    restrictedToMinimumLevel: LogEventLevel.Error,
+                    rollingInterval: RollingInterval.Minute
+                )
+                .WriteTo.File(
+                    new RenderedCompactJsonFormatter(),
+                    "Logs//Activity//BookStoreAPI-Errors-.log",
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    rollingInterval: RollingInterval.Minute
+                )
+                .CreateLogger();
+        }
     }
 }

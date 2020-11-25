@@ -1,6 +1,7 @@
 ﻿using BookStore.API.ResponseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -31,6 +32,12 @@ namespace API.Middleware
             catch (Exception e)
             {
                 var response = GetApiResponse(e);
+                Log.Error(
+                    "Exception Type: {exceptionType}. Exception message: {message}. Stacktrace: {stackTrace}", 
+                    e.GetType().ToString(), 
+                    e.Message,
+                    e.StackTrace.ToString()
+                );
                 var serializedRepsonse = GetSerializedApiResponse(response);
                 SetContextResponse(context);
                 await context.Response.WriteAsync(serializedRepsonse);
