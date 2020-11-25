@@ -1,9 +1,10 @@
+using API.Middleware;
 using BookStore.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
 
 namespace BookStore.API
 {
@@ -31,11 +32,7 @@ namespace BookStore.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            app.UseMiddleware<ExceptionsMiddleware>();
             app.UseHttpsRedirection();
             app.UseSwaggerTooling();
             app.UseRouting();
