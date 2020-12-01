@@ -6,7 +6,7 @@ namespace BookStore.Data.Infrastructure
 {
     public class BookRepository : GenericRepository<Book>, IBookRepopository
     {
-        private BookStoreDbContext _context;
+        private readonly BookStoreDbContext _context;
 
         public BookRepository(BookStoreDbContext context) : base(context)
         {

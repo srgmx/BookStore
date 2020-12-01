@@ -25,6 +25,7 @@ namespace BookStore.Business.Services
             _bookStoreUnitOfWork = bookStoreUnitOfWork;
             _mapper = mapper;
         }
+
         public async Task<IEnumerable<BookDto>> GetBooksAsync()
         {
             var specification = new BookWithAuthorsSpecification();
@@ -62,14 +63,6 @@ namespace BookStore.Business.Services
             return bookToReturn;
         }
 
-        private static void CheckBookExists(Book book)
-        {
-            if (book == null)
-            {
-                throw new RecordNotFoundException();
-            }
-        }
-
         public async Task<bool> RemoveBookAsync(Guid id)
         {
             var specification = new BookWithAuthorsSpecification(id);
@@ -79,6 +72,14 @@ namespace BookStore.Business.Services
             await _bookStoreUnitOfWork.SaveAsync();
 
             return true;
+        }
+
+        private static void CheckBookExists(Book book)
+        {
+            if (book == null)
+            {
+                throw new RecordNotFoundException();
+            }
         }
     }
 }

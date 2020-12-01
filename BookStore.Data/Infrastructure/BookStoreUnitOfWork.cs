@@ -7,10 +7,10 @@ namespace BookStore.Data.Infrastructure
 {
     public class BookStoreUnitOfWork : IBookStoreUnitOfWork, IDisposable
     {
+        private readonly BookStoreDbContext _context;
         private IUserRepository _userRepository;
         private IAuthorRepository _authorRepository;
         private IBookRepopository _bookRepopository;
-        private readonly BookStoreDbContext _context;
         private bool _isDisposed;
 
         public BookStoreUnitOfWork(BookStoreDbContext context)
@@ -62,6 +62,12 @@ namespace BookStore.Data.Infrastructure
             await _context.SaveChangesAsync();
         }
 
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_isDisposed)
@@ -73,12 +79,6 @@ namespace BookStore.Data.Infrastructure
 
                 _isDisposed = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

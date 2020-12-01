@@ -52,6 +52,7 @@ namespace BookStore.Data.Infrastructure
         {
             // Step 1: Get existing entry
             var entityInDb = await GetByIdAsync(entity.Id);
+
             // Step 2: Set modification
             var entityToReturn = SetModification(entityInDb, entity);
 
@@ -63,7 +64,7 @@ namespace BookStore.Data.Infrastructure
         /// Must return result updated entity.
         /// </summary>
         /// <param name="entityInDb">Entity is existed in the database.</param>
-        /// <param name="entity">Entity contains propeties with updated values.</param>
+        /// <param name="entity">Entity contains properties with updated values.</param>
         /// <returns>Result entity with updated properties.</returns>
         protected virtual TEntity SetModification(TEntity entityInDb, TEntity entity)
         {

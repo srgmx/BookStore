@@ -27,7 +27,6 @@ namespace BookStore.API.Controllers
             return Ok(authors);
         }
 
-
         // GET api/authors/1
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorDto>> GetAuthorByIdAsync(Guid id)

@@ -64,7 +64,7 @@ namespace API.Middleware
             };
         }
 
-        private string GetSerializedApiResponse(Object response)
+        private string GetSerializedApiResponse(object response)
         {
             var options = new JsonSerializerOptions()
             {

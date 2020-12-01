@@ -20,7 +20,7 @@ namespace BookStore.API.Controllers
         }
 
         // GET api/books/
-        [HttpGet()]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetBooksAsync()
         {
             var books = await _bookService.GetBooksAsync();
