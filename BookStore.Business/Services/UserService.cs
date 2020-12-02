@@ -12,11 +12,11 @@ namespace BookStore.Business.Services
 {
     public class UserService : IUserService
     {
-        private readonly IBookStoreUnitOfWork _bookStoreUnitOfWork;
+        private readonly IUnitOfWork _bookStoreUnitOfWork;
         private readonly IMapper _mapper;
 
         public UserService(
-            IBookStoreUnitOfWork bookStoreUnitOfWork,
+            IUnitOfWork bookStoreUnitOfWork,
             IMapper mapper
         )
         {

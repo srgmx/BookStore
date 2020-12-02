@@ -2,7 +2,7 @@
 
 namespace BookStore.Data.Contracts
 {
-    public interface IBookStoreUnitOfWork
+    public interface IUnitOfWork
     {
         IUserRepository UserRepository { get; }
 

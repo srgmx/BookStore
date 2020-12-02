@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Data.Infrastructure
 {
-    public class BookStoreUnitOfWork : IBookStoreUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly BookStoreDbContext _context;
         private IUserRepository _userRepository;
@@ -13,7 +13,7 @@ namespace BookStore.Data.Infrastructure
         private IBookRepopository _bookRepopository;
         private bool _isDisposed;
 
-        public BookStoreUnitOfWork(BookStoreDbContext context)
+        public UnitOfWork(BookStoreDbContext context)
         {
             _context = context;
         }

@@ -22,7 +22,7 @@ namespace BookStore.API.Extensions
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBookRepopository, BookRepository>();
-            services.AddScoped<IBookStoreUnitOfWork, BookStoreUnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

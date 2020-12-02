@@ -33,7 +33,7 @@ namespace BookStore.Data.Infrastructure
             return await ApplySpecification(specification).ToListAsync();
         }
 
-        public virtual async Task<TEntity> FindAsync(ISpecification<TEntity> specification = null)
+        public virtual async Task<TEntity> GetAsync(ISpecification<TEntity> specification = null)
         {
             return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
@@ -76,14 +76,14 @@ namespace BookStore.Data.Infrastructure
         }
 
         protected IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
+        {
+            if (specification == null)
             {
-                if (specification == null)
-                {
-                    return _entities;
-                }
-
-                return SpecificationEvaluator<TEntity>
-                    .GetQuery(_entities.AsQueryable(), specification);
+                return _entities;
             }
+
+            return SpecificationEvaluator<TEntity>
+                .GetQuery(_entities.AsQueryable(), specification);
         }
+    }
 }

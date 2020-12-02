@@ -14,11 +14,11 @@ namespace BookStore.Business.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookStoreUnitOfWork _bookStoreUnitOfWork;
+        private readonly IUnitOfWork _bookStoreUnitOfWork;
         private readonly IMapper _mapper;
 
         public BookService(
-            IBookStoreUnitOfWork bookStoreUnitOfWork,
+            IUnitOfWork bookStoreUnitOfWork,
             IMapper mapper
         )
         {
@@ -37,7 +37,7 @@ namespace BookStore.Business.Services
         public async Task<BookDto> GetBookAsync(Guid id)
         {
             var specification = new BookWithAuthorsSpecification(id);
-            var book = await _bookStoreUnitOfWork.BookRepository.FindAsync(specification);
+            var book = await _bookStoreUnitOfWork.BookRepository.GetAsync(specification);
             CheckBookExists(book);
             var bookToReturn = _mapper.Map<Book, BookDto>(book);
 
@@ -66,7 +66,7 @@ namespace BookStore.Business.Services
         public async Task<bool> RemoveBookAsync(Guid id)
         {
             var specification = new BookWithAuthorsSpecification(id);
-            var book = await _bookStoreUnitOfWork.BookRepository.FindAsync(specification);
+            var book = await _bookStoreUnitOfWork.BookRepository.GetAsync(specification);
             CheckBookExists(book);
             _bookStoreUnitOfWork.BookRepository.Remove(book);
             await _bookStoreUnitOfWork.SaveAsync();

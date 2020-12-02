@@ -11,7 +11,7 @@ namespace BookStore.Data.Contracts
 
         Task<T> GetByIdAsync(Guid id);
 
-        Task<T> FindAsync(ISpecification<T> specification = null);
+        Task<T> GetAsync(ISpecification<T> specification = null);
 
         Task<T> AddAsync(T entity);
 
