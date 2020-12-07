@@ -13,22 +13,22 @@ namespace BookStore.Business.Services
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IUnitOfWork _bookStoreUnitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public AuthorService(
-            IUnitOfWork bookStore, 
+            IUnitOfWork unitOfWork, 
             IMapper mapper
         )
         {
-            _bookStoreUnitOfWork = bookStore;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<AuthorDto>> GetAuthorsAsync()
         {
             var authorWithUserInfoSpec = new AuthorWithUserInfoSpecification();
-            var authors = await _bookStoreUnitOfWork.AuthorRepository.GetAllAsync(authorWithUserInfoSpec);
+            var authors = await _unitOfWork.AuthorRepository.GetAllAsync(authorWithUserInfoSpec);
             var authorsToReturn = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(authors);
 
             return authorsToReturn;
@@ -37,7 +37,7 @@ namespace BookStore.Business.Services
         public async Task<AuthorDto> GetAuthorByIdAsync(Guid id)
         {
             var authorWithUserInfoSpec = new AuthorWithUserInfoSpecification(id);
-            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.GetAsync(authorWithUserInfoSpec);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(authorWithUserInfoSpec);
             CheckAuthorExists(authorInDb);
             var authorToReturn = _mapper.Map<Author, AuthorDto>(authorInDb);
 
@@ -47,7 +47,7 @@ namespace BookStore.Business.Services
         public async Task<AuthorDto> AddAuthorAsync(AuthorToAddDto author)
         {
             var authorByUserIdSpec = new AuthorByUserIdSpecification(author.UserId);
-            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.GetAsync(authorByUserIdSpec);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(authorByUserIdSpec);
 
             if (authorInDb != null)
             {
@@ -57,8 +57,8 @@ namespace BookStore.Business.Services
             }
 
             var authorToAdd = _mapper.Map<AuthorToAddDto, Author>(author);
-            authorInDb = await _bookStoreUnitOfWork.AuthorRepository.AddAsync(authorToAdd);
-            await _bookStoreUnitOfWork.SaveAsync();
+            authorInDb = await _unitOfWork.AuthorRepository.AddAsync(authorToAdd);
+            await _unitOfWork.SaveAsync();
             var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
 
             return authorToReturn;
@@ -66,11 +66,11 @@ namespace BookStore.Business.Services
 
         public async Task<AuthorDto> UpdateAuthorAsync(AuthorToUpdateDto author)
         {
-            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.GetByIdAsync(author.Id);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetByIdAsync(author.Id);
             CheckAuthorExists(authorInDb);
             var authorToUpdate = _mapper.Map<AuthorToUpdateDto, Author>(author);
-            authorInDb = await _bookStoreUnitOfWork.AuthorRepository.UpdateAsync(authorToUpdate);
-            await _bookStoreUnitOfWork.SaveAsync();
+            authorInDb = await _unitOfWork.AuthorRepository.UpdateAsync(authorToUpdate);
+            await _unitOfWork.SaveAsync();
             var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
 
             return authorToReturn;
@@ -78,10 +78,10 @@ namespace BookStore.Business.Services
 
         public async Task<bool> RemoveAuthorAsync(Guid id)
         {
-            var authorInDb = await _bookStoreUnitOfWork.AuthorRepository.GetByIdAsync(id);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetByIdAsync(id);
             CheckAuthorExists(authorInDb);
-            _bookStoreUnitOfWork.AuthorRepository.Remove(authorInDb);
-            await _bookStoreUnitOfWork.SaveAsync();
+            _unitOfWork.AuthorRepository.Remove(authorInDb);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }

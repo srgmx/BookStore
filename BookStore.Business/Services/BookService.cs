@@ -14,22 +14,22 @@ namespace BookStore.Business.Services
 {
     public class BookService : IBookService
     {
-        private readonly IUnitOfWork _bookStoreUnitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public BookService(
-            IUnitOfWork bookStoreUnitOfWork,
+            IUnitOfWork unitOfWork,
             IMapper mapper
         )
         {
-            _bookStoreUnitOfWork = bookStoreUnitOfWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<BookDto>> GetBooksAsync()
         {
             var specification = new BookWithAuthorsSpecification();
-            var books = await _bookStoreUnitOfWork.BookRepository.GetAllAsync(specification);
+            var books = await _unitOfWork.BookRepository.GetAllAsync(specification);
 
             return _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(books);
         }
@@ -37,7 +37,7 @@ namespace BookStore.Business.Services
         public async Task<BookDto> GetBookAsync(Guid id)
         {
             var specification = new BookWithAuthorsSpecification(id);
-            var book = await _bookStoreUnitOfWork.BookRepository.GetAsync(specification);
+            var book = await _unitOfWork.BookRepository.GetAsync(specification);
             CheckBookExists(book);
             var bookToReturn = _mapper.Map<Book, BookDto>(book);
 
@@ -47,7 +47,7 @@ namespace BookStore.Business.Services
         public async Task<BookDto> AddBookAsync(BookToAddDto book)
         {
             var specification = new AuthorsByIdRangeSpecification(book.AuthorIds);
-            var authors = await _bookStoreUnitOfWork.AuthorRepository.GetAllAsync(specification);
+            var authors = await _unitOfWork.AuthorRepository.GetAllAsync(specification);
 
             if (authors.Count() != book.AuthorIds.Count())
             {
@@ -56,8 +56,8 @@ namespace BookStore.Business.Services
 
             var bookToAdd = _mapper.Map<BookToAddDto, Book>(book);
             bookToAdd.Authors.AddRange(authors);
-            var bookInDb = await _bookStoreUnitOfWork.BookRepository.AddAsync(bookToAdd);
-            await _bookStoreUnitOfWork.SaveAsync();
+            var bookInDb = await _unitOfWork.BookRepository.AddAsync(bookToAdd);
+            await _unitOfWork.SaveAsync();
             var bookToReturn = await GetBookAsync(bookInDb.Id);
 
             return bookToReturn;
@@ -66,10 +66,10 @@ namespace BookStore.Business.Services
         public async Task<bool> RemoveBookAsync(Guid id)
         {
             var specification = new BookWithAuthorsSpecification(id);
-            var book = await _bookStoreUnitOfWork.BookRepository.GetAsync(specification);
+            var book = await _unitOfWork.BookRepository.GetAsync(specification);
             CheckBookExists(book);
-            _bookStoreUnitOfWork.BookRepository.Remove(book);
-            await _bookStoreUnitOfWork.SaveAsync();
+            _unitOfWork.BookRepository.Remove(book);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
