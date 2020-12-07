@@ -1,4 +1,5 @@
-﻿using BookStore.Business.Contracts;
+﻿using BookStore.API.Extentions;
+using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -51,9 +52,9 @@ namespace BookStore.API.Controllers
             try
             {
                 var newBook = await _bookService.AddBookAsync(book);
-                var resourcePath = $"{Request.Path}/{newBook.Id}";
+                var uri = Request.GetCreatedUri(newBook.Id);
 
-                return Created(resourcePath, newBook);
+                return Created(uri, newBook);
             }
             catch (InvalidAuthorsException)
             {

@@ -1,4 +1,5 @@
-﻿using BookStore.Business.Contracts;
+﻿using BookStore.API.Extentions;
+using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -49,9 +50,9 @@ namespace BookStore.API.Controllers
         public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserDto user)
         {
             var newUser = await _userService.AddUserAsync(user);
-            string newPath = $"{Request.Path}{newUser.Id}";
+            var uri = Request.GetCreatedUri(newUser.Id);
 
-            return Created(newPath, newUser);
+            return Created(uri, newUser);
         }
 
         // PUT api/users/1
