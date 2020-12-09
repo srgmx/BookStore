@@ -1,4 +1,4 @@
-using API.Middleware;
+﻿using API.Middleware;
 using BookStore.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,9 +11,12 @@ namespace BookStore.API
     {
         private readonly IConfiguration _config;
 
-        public Startup(IConfiguration config)
+        public Startup(IWebHostEnvironment env)
         {
-            _config = config;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+            _config = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
