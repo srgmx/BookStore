@@ -75,7 +75,9 @@ namespace BookStore.Business.Services
         {
             if (user == null)
             {
-                throw new RecordNotFoundException();
+                var message = "User was not found.";
+
+                throw new RecordNotFoundException(message);
             }
         }
     }

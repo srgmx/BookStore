@@ -51,7 +51,9 @@ namespace BookStore.Business.Services
 
             if (authors.Count() != book.AuthorIds.Count())
             {
-                throw new InvalidAuthorsException();
+                var message = "Invalid author in the list. All authors must exist in the system.";
+
+                throw new InvalidAuthorsException(message);
             }
 
             var bookToAdd = _mapper.Map<BookToAddDto, Book>(book);
@@ -78,7 +80,9 @@ namespace BookStore.Business.Services
         {
             if (book == null)
             {
-                throw new RecordNotFoundException();
+                var message = "Book was not found.";
+
+                throw new RecordNotFoundException(message);
             }
         }
     }

@@ -1,7 +1,6 @@
 ﻿using BookStore.API.Extentions;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,49 +32,28 @@ namespace BookStore.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BookDto>> GetBookAsync(Guid id)
         {
-            try
-            {
-                var book = await _bookService.GetBookAsync(id);
+            var book = await _bookService.GetBookAsync(id);
 
-                return Ok(book);
-            }
-            catch (RecordNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok(book);
         }
 
         // POST api/books
         [HttpPost]
         public async Task<ActionResult<BookDto>> CreateBook([FromBody] BookToAddDto book)
         {
-            try
-            {
-                var newBook = await _bookService.AddBookAsync(book);
-                var uri = Request.GetCreatedUri(newBook.Id);
+            var newBook = await _bookService.AddBookAsync(book);
+            var uri = Request.GetCreatedUri(newBook.Id);
 
-                return Created(uri, newBook);
-            }
-            catch (InvalidAuthorsException)
-            {
-                return BadRequest("Add author first.");
-            }
+            return Created(uri, newBook);
         }
 
         // DELETE api/books/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBookAsync(Guid id)
         {
-            try
-            {
-                var book = await _bookService.RemoveBookAsync(id);
+            await _bookService.RemoveBookAsync(id);
 
-                return Ok();
-            }
-            catch (RecordNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok();
         }
     }
 }

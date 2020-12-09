@@ -90,7 +90,9 @@ namespace BookStore.Business.Services
         {
             if (author == null)
             {
-                throw new RecordNotFoundException();
+                var message = "Author was not found.";
+
+                throw new RecordNotFoundException(message);
             }
         }
     }

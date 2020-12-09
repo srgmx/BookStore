@@ -1,7 +1,6 @@
 ﻿using BookStore.API.Extentions;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,16 +32,9 @@ namespace BookStore.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserAsync(Guid id)
         {
-            try
-            {
-                var user = await _userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
 
-                return Ok(user);
-            }
-            catch (RecordNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok(user);
         }
 
         // POST api/users
@@ -59,33 +51,19 @@ namespace BookStore.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> UpdateUser(Guid id, [FromBody] UserDto user)
         {
-            try
-            {
-                user.Id = id;
-                var userUpdated = await _userService.UpdateUserAsync(user);
+            user.Id = id;
+            var userUpdated = await _userService.UpdateUserAsync(user);
 
-                return Ok(userUpdated);
-            }
-            catch (RecordNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok(userUpdated);
         }
 
         // DELETE api/users/1
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserDto>> DeleteUser(Guid id)
         {
-            try
-            {
-                await _userService.RemoveUserByIdAsync(id);
+            await _userService.RemoveUserByIdAsync(id);
 
-                return Ok();
-            }
-            catch (RecordNotFoundException)
-            {
-                return NotFound();
-            }
+            return Ok();
         }
     }
 }

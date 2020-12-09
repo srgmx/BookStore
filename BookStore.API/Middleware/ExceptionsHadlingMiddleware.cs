@@ -1,7 +1,7 @@
 ﻿using BookStore.API.ResponseModels;
+using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
-using Serilog;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -31,40 +31,74 @@ namespace API.Middleware
             }
             catch (Exception e)
             {
-                var response = GetApiResponse(e);
-                Log.Error(
-                    "Exception Type: {exceptionType}. Exception message: {message}. Stacktrace: {stackTrace}", 
-                    e.GetType().ToString(), 
-                    e.Message,
-                    e.StackTrace.ToString()
-                );
-                var serializedRepsonse = GetSerializedApiResponse(response);
-                SetContextResponse(context);
-                await context.Response.WriteAsync(serializedRepsonse);
-            }
-        }
+                //Log.Error(
+                //    "Exception Type: {exceptionType}. Exception message: {message}. Stacktrace: {stackTrace}", 
+                //    e.GetType().ToString(), 
+                //    e.Message,
+                //    e.StackTrace.ToString()
+                //);
+                ApiBaseResponse response;
 
-        private ApiBaseResponse GetApiResponse(Exception e)
-        {
-            if (_env.IsDevelopment())
-            {
-                return new ApiExceptionResponse()
+                if (e is RecordNotFoundException)
                 {
-                    StatusCode = (int) HttpStatusCode.InternalServerError,
-                    Message = e.Message,
-                    ExceptionType = e.GetType().ToString(),
-                    ExceptionStackTrace = e.StackTrace.ToString()
-                };
-            }
+                    response = new ApiBaseResponse()
+                    {
+                        StatusCode = (int)HttpStatusCode.NotFound,
+                        Message = e.Message
+                    };
+                    await Respond(response, context);
 
-            return new ApiBaseResponse()
-            {
-                StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = "Internal Server Error"
-            };
+                    return;
+                }
+
+                if (e is InvalidAuthorsException || e is ExistingAuthorException)
+                {
+                    response = new ApiBaseResponse()
+                    {
+                        StatusCode = (int)HttpStatusCode.BadRequest,
+                        Message = e.Message
+                    };
+                    await Respond(response, context);
+
+                    return;
+                }
+
+                if (_env.IsDevelopment())
+                {
+                    response = new ApiExceptionResponse()
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError,
+                        Message = e.Message,
+                        ExceptionType = e.GetType().ToString(),
+                        ExceptionStackTrace = e.StackTrace.ToString()
+                    };
+                    await Respond(response, context);
+
+                    return;
+                }
+                else
+                {
+                    response = new ApiBaseResponse()
+                    {
+                        StatusCode = (int)HttpStatusCode.InternalServerError,
+                        Message = "Internal Server Error."
+                    };
+                    await Respond(response, context);
+
+                    return;
+                }
+            }
         }
 
-        private string GetSerializedApiResponse(object response)
+        private async Task Respond(ApiBaseResponse response, HttpContext context)
+        {
+            var serializedResponse = GetSerializedResponse(response);
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = response.StatusCode;
+            await context.Response.WriteAsync(serializedResponse);
+        }
+
+        private string GetSerializedResponse(object response)
         {
             var options = new JsonSerializerOptions()
             {
@@ -72,12 +106,6 @@ namespace API.Middleware
             };
 
             return JsonSerializer.Serialize(response, options);
-        }
-
-        private void SetContextResponse(HttpContext context)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         }
     }
 }
