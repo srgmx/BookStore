@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace BookStore.API
 {
@@ -36,6 +37,7 @@ namespace BookStore.API
         {
             app.UseMiddleware<ExceptionsMiddleware>();
             app.UseHttpsRedirection();
+            app.UseSerilogRequestLogging();
             app.UseSwaggerTooling();
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

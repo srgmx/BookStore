@@ -2,6 +2,7 @@
 using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -13,14 +14,17 @@ namespace API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IHostEnvironment _env;
+        private readonly ILogger<ExceptionsMiddleware> _logger;
 
         public ExceptionsMiddleware(
             RequestDelegate next,
-            IHostEnvironment env
+            IHostEnvironment env,
+            ILogger<ExceptionsMiddleware> logger
         )
         {
             _next = next;
             _env = env;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -31,12 +35,8 @@ namespace API.Middleware
             }
             catch (Exception e)
             {
-                //Log.Error(
-                //    "Exception Type: {exceptionType}. Exception message: {message}. Stacktrace: {stackTrace}", 
-                //    e.GetType().ToString(), 
-                //    e.Message,
-                //    e.StackTrace.ToString()
-                //);
+                _logger.LogError("Error: {exceptionMessage}. Type: {exceptionType}. Trace: {exceptionStackTrace}",
+                    e.Message, e.GetType(), e.StackTrace);
                 ApiBaseResponse response;
 
                 if (e is RecordNotFoundException)

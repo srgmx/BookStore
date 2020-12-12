@@ -5,9 +5,12 @@ using BookStore.Data.Contracts;
 using BookStore.Data.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+
 
 namespace BookStore.Business.Services
 {
@@ -15,14 +18,17 @@ namespace BookStore.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<AuthorService> _logger;
 
         public AuthorService(
             IUnitOfWork unitOfWork, 
-            IMapper mapper
+            IMapper mapper,
+            ILogger<AuthorService> logger
         )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<AuthorDto>> GetAuthorsAsync()
@@ -30,6 +36,7 @@ namespace BookStore.Business.Services
             var authorWithUserInfoSpec = new AuthorWithUserInfoSpecification();
             var authors = await _unitOfWork.AuthorRepository.GetAllAsync(authorWithUserInfoSpec);
             var authorsToReturn = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(authors);
+            _logger.LogInformation("Authors are received: {Data}", JsonSerializer.Serialize(authorsToReturn));
 
             return authorsToReturn;
         }
@@ -40,6 +47,7 @@ namespace BookStore.Business.Services
             var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(authorWithUserInfoSpec);
             CheckAuthorExists(authorInDb);
             var authorToReturn = _mapper.Map<Author, AuthorDto>(authorInDb);
+            _logger.LogInformation("Author is received: {Data}", JsonSerializer.Serialize(authorToReturn));
 
             return authorToReturn;
         }
@@ -52,6 +60,7 @@ namespace BookStore.Business.Services
             if (authorInDb != null)
             {
                 string message = $"User with UserId={author.UserId} is an author already.";
+                _logger.LogWarning(message);
 
                 throw new ExistingAuthorException(message);
             }
@@ -60,6 +69,7 @@ namespace BookStore.Business.Services
             authorInDb = await _unitOfWork.AuthorRepository.AddAsync(authorToAdd);
             await _unitOfWork.SaveAsync();
             var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
+            _logger.LogInformation("Author is added: {Data}", JsonSerializer.Serialize(authorToReturn));
 
             return authorToReturn;
         }
@@ -72,6 +82,7 @@ namespace BookStore.Business.Services
             authorInDb = await _unitOfWork.AuthorRepository.UpdateAsync(authorToUpdate);
             await _unitOfWork.SaveAsync();
             var authorToReturn = await GetAuthorByIdAsync(authorInDb.Id);
+            _logger.LogInformation("Author is updated: {Data}", JsonSerializer.Serialize(authorToReturn));
 
             return authorToReturn;
         }
@@ -82,6 +93,7 @@ namespace BookStore.Business.Services
             CheckAuthorExists(authorInDb);
             _unitOfWork.AuthorRepository.Remove(authorInDb);
             await _unitOfWork.SaveAsync();
+            _logger.LogInformation($"Author with id {id} is removed.");
 
             return true;
         }
@@ -91,6 +103,7 @@ namespace BookStore.Business.Services
             if (author == null)
             {
                 var message = "Author was not found.";
+                _logger.LogWarning(message);
 
                 throw new RecordNotFoundException(message);
             }
