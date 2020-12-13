@@ -35,8 +35,8 @@ namespace API.Middleware
             }
             catch (Exception e)
             {
-                _logger.LogError("Error: {exceptionMessage}. Type: {exceptionType}. Trace: {exceptionStackTrace}",
-                    e.Message, e.GetType(), e.StackTrace);
+                var logMessage = "Error: {exceptionMessage}. Type: {exceptionType}. Trace: {exceptionStackTrace}";
+                _logger.LogError(logMessage, e.Message, e.GetType(), e.StackTrace);
                 ApiBaseResponse response;
 
                 if (e is RecordNotFoundException)
