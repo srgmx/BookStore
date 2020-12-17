@@ -16,5 +16,7 @@ namespace BookStore.Business.Contracts
         Task<AuthorDto> UpdateAuthorAsync(AuthorToUpdateDto author);
 
         Task<bool> RemoveAuthorAsync(Guid id);
+
+        Task<AuthorDto> AddBookToAuthor(Guid authorId, Guid bookId);
     }
 }

@@ -3,14 +3,14 @@ using System;
 
 namespace BookStore.Data.Specifications
 {
-    public class AuthorWithUserInfoSpecification : BaseSpecification<Author>
+    public class AuthorWithUserAndBooksSpecification : BaseSpecification<Author>
     {
-        public AuthorWithUserInfoSpecification() : base()
+        public AuthorWithUserAndBooksSpecification() : base()
         {
             ConfigureInclude();
         }
 
-        public AuthorWithUserInfoSpecification(Guid authorId) :
+        public AuthorWithUserAndBooksSpecification(Guid authorId) :
             base(u => u.Id == authorId)
         {
             ConfigureInclude();
@@ -19,6 +19,7 @@ namespace BookStore.Data.Specifications
         private void ConfigureInclude()
         {
             AddInclude(a => a.User);
+            AddInclude(a => a.Books);
         }
     }
 }

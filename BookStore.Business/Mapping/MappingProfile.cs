@@ -11,6 +11,16 @@ namespace BookStore.Business.Mapping
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
 
+            CreateMap<Book, AuthorBookDto>()
+                .ForMember(
+                    d => d.BookId,
+                    o => o.MapFrom(s => s.Id)
+                )
+                .ForMember(
+                    d => d.BookName,
+                    o => o.MapFrom(s => s.Name)
+                );
+
             CreateMap<Author, AuthorDto>()
                 .ForMember(
                     d => d.FirstName,
@@ -23,6 +33,10 @@ namespace BookStore.Business.Mapping
                 .ForMember(
                     d => d.UserId,
                     o => o.MapFrom(s => s.User.Id)
+                )
+                .ForMember(
+                    d => d.AuthorBooks,
+                    o => o.MapFrom(s => s.Books)
                 );
             CreateMap<AuthorToAddDto, Author>();
             CreateMap<AuthorToUpdateDto, Author>();
