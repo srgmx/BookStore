@@ -55,5 +55,14 @@ namespace BookStore.API.Controllers
 
             return Ok();
         }
+
+        // PUT api/books/1/author/1
+        [HttpPut("{bookId}/authors/{authorId}")]
+        public async Task<ActionResult> AddAuthorToBook(Guid bookId, Guid authorId)
+        {
+            var book = await _bookService.AddAuthorToBookAsync(bookId, authorId);
+
+            return Ok(book);
+        }
     }
 }

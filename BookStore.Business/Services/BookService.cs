@@ -88,6 +88,25 @@ namespace BookStore.Business.Services
             return true;
         }
 
+        public async Task<BookDto> AddAuthorToBookAsync(Guid bookId, Guid authorId)
+        {
+            try
+            {
+                var bookInDb = await _unitOfWork.BookRepository.AddAuthorToBookAsync(bookId, authorId);
+                await _unitOfWork.SaveAsync();
+                var bookToReturn = _mapper.Map<Book, BookDto>(bookInDb);
+                _logger.LogInformation($"Author with id {authorId} was added for book with id {bookId}.");
+
+                return bookToReturn;
+            }
+            catch (RecordNotFoundException e)
+            {
+                _logger.LogWarning(e.Message);
+
+                throw;
+            }
+        }
+
         private void CheckBookExists(Book book)
         {
             if (book == null)

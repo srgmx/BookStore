@@ -7,12 +7,14 @@ namespace BookStore.Business.Contracts
 {
     public interface IBookService
     {
-        public Task<IEnumerable<BookDto>> GetBooksAsync();
+        Task<IEnumerable<BookDto>> GetBooksAsync();
 
-        public Task<BookDto> GetBookAsync(Guid id);
+        Task<BookDto> GetBookAsync(Guid id);
 
-        public Task<BookDto> AddBookAsync(BookToAddDto book);
+        Task<BookDto> AddBookAsync(BookToAddDto book);
 
-        public Task<bool> RemoveBookAsync(Guid id);
+        Task<bool> RemoveBookAsync(Guid id);
+
+        Task<BookDto> AddAuthorToBookAsync(Guid bookId, Guid authorId);
     }
 }
