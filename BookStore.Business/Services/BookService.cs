@@ -78,10 +78,7 @@ namespace BookStore.Business.Services
 
         public async Task<bool> RemoveBookAsync(Guid id)
         {
-            var specification = new BookWithAuthorsSpecification(id);
-            var book = await _unitOfWork.BookRepository.GetAsync(specification);
-            CheckBookExists(book);
-            _unitOfWork.BookRepository.Remove(book);
+            _unitOfWork.BookRepository.Remove(id);
             await _unitOfWork.SaveAsync();
             _logger.LogInformation($"Book with id {id} is removed.");
 

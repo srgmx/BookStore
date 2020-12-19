@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Infrastructure
 {
     public abstract class GenericRepository<TEntity> :
-        IGenericRepository<TEntity> where TEntity : BaseEntity
+        IGenericRepository<TEntity> where TEntity : BaseEntity, new()
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _entities;
@@ -45,6 +45,12 @@ namespace BookStore.Data.Infrastructure
 
         public virtual void Remove(TEntity entity)
         {
+            _entities.Remove(entity);
+        }
+
+        public virtual void Remove(Guid id)
+        {
+            var entity = new TEntity() { Id = id };
             _entities.Remove(entity);
         }
 
