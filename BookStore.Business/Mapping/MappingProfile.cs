@@ -18,6 +18,8 @@ namespace BookStore.Business.Mapping
             CreateMap<User, UserDto>();
 
             CreateMap<UserDto, User>();
+
+            CreateMap<User, UserPermissionsDto>();
         }
 
         private void SetAuthorMapping()

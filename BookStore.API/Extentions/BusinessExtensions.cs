@@ -9,6 +9,7 @@ namespace BookStore.API.Extensions
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserPermissionsService, UserPermissionsService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IBookService, BookService>();
 

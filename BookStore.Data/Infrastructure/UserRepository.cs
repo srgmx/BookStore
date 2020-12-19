@@ -1,6 +1,12 @@
 ﻿using BookStore.Data.Contracts;
 using BookStore.Data.Persistance;
 using BookStore.Domain;
+using BookStore.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStore.Data.Infrastructure
 {
@@ -11,6 +17,37 @@ namespace BookStore.Data.Infrastructure
         public UserRepository(BookStoreDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<User> AddPermissionsAsync(Guid userId, IEnumerable<string> permissions)
+        {
+            var userInDb = await _context.User.FindAsync(userId);
+
+            if (userInDb == null)
+            {
+                throw new RecordNotFoundException("User was not found to add permissions.");
+            }
+
+            var newPermissions = permissions.Where(p => !userInDb.Permissions.Contains(p));
+            userInDb.Permissions.AddRange(newPermissions);
+            _context.Entry(userInDb).Property(e => e.Permissions).IsModified = true;
+
+            return userInDb;
+        }
+
+        public async Task<User> RemovePermissionsAsync(Guid userId, IEnumerable<string> permissions)
+        {
+            var userInDb = await _context.User.FindAsync(userId);
+
+            if (userInDb == null)
+            {
+                throw new RecordNotFoundException("User was not found to remove permissions.");
+            }
+
+            var updatedPermissions = userInDb.Permissions.Where(p => !permissions.Contains(p));
+            userInDb.Permissions = updatedPermissions.ToList();
+
+            return userInDb;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace BookStore.Data.Persistance
 {
@@ -28,6 +30,15 @@ namespace BookStore.Data.Persistance
                 user.Property(u => u.Id).HasDefaultValueSql(newIdFunction);
                 user.Property(u => u.LastName).HasMaxLength(defaultMaxLength);
                 user.Property(u => u.FirstName).HasMaxLength(defaultMaxLength);
+
+                user.Property(u => u.Permissions)
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasDefaultValueSql("'[]'")
+                        .HasConversion(
+                            p => JsonSerializer.Serialize(p, null),
+                            p => JsonSerializer.Deserialize<List<string>>(p, null)
+                         );
             });
 
             builder.Entity<Author>(author =>
