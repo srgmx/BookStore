@@ -12,7 +12,7 @@ namespace BookStore.API.Extensions
         public static IServiceCollection AddDataPersistance(this IServiceCollection services, IConfiguration _config)
         {
             services.AddDbContext<BookStoreDbContext>(o =>
-                o.UseSqlServer(_config.GetConnectionString("BookStoreDb")));
+                o.UseSqlServer(_config.GetConnectionString("MSSqlBookStoreDb")));
 
             return services;
         } 
