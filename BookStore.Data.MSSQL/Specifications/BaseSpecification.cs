@@ -1,4 +1,4 @@
-﻿using BookStore.Data.Contracts;
+﻿using BookStore.Data.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

@@ -1,4 +1,4 @@
-﻿using BookStore.Data.Contracts;
+﻿using BookStore.Data.Abstraction;
 using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

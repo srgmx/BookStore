@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BookStore.Data.Contracts
+namespace BookStore.Data.Abstraction
 {
     public interface IUnitOfWork
     {

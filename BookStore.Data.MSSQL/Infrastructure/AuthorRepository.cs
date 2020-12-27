@@ -1,4 +1,4 @@
-﻿using BookStore.Data.Contracts;
+﻿using BookStore.Data.Abstraction;
 using BookStore.Data.MSSQL.Persistance;
 using BookStore.Data.MSSQL.Specifications;
 using BookStore.Domain;

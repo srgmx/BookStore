@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
-using BookStore.Data.Contracts;
+using BookStore.Data.Abstraction;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
