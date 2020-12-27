@@ -1,5 +1,5 @@
 ﻿using BookStore.Data.Contracts;
-using BookStore.Data.Specifications;
+using BookStore.Data.MSSQL.Specifications;
 using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BookStore.Data.Infrastructure
+namespace BookStore.Data.MSSQL.Infrastructure
 {
     public abstract class GenericRepository<TEntity> :
         IGenericRepository<TEntity> where TEntity : BaseEntity, new()

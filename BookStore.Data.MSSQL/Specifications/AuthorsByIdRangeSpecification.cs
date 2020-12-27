@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BookStore.Data.Specifications
+namespace BookStore.Data.MSSQL.Specifications
 {
     public class AuthorsByIdRangeSpecification : BaseSpecification<Author>
     {

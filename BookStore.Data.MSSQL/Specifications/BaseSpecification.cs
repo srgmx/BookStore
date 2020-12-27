@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace BookStore.Data.Specifications
+namespace BookStore.Data.MSSQL.Specifications
 {
     public abstract class BaseSpecification<T> : ISpecification<T>
     {

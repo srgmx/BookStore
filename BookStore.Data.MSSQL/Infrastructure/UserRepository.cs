@@ -1,5 +1,5 @@
 ﻿using BookStore.Data.Contracts;
-using BookStore.Data.Persistance;
+using BookStore.Data.MSSQL.Persistance;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStore.Data.Infrastructure
+namespace BookStore.Data.MSSQL.Infrastructure
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {

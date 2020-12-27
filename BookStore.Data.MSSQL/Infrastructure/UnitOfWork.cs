@@ -1,9 +1,9 @@
 ﻿using BookStore.Data.Contracts;
-using BookStore.Data.Persistance;
+using BookStore.Data.MSSQL.Persistance;
 using System;
 using System.Threading.Tasks;
 
-namespace BookStore.Data.Infrastructure
+namespace BookStore.Data.MSSQL.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Domain", "BookStore.Domain\BookStore.Domain.csproj", "{845519E5-B7EC-4F4E-8714-160C6FF402BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data", "BookStore.Data\BookStore.Data.csproj", "{51B51BB8-A9B1-430B-A898-5252DF7D114D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data.MSSQL", "BookStore.Data.MSSQL\BookStore.Data.MSSQL.csproj", "{51B51BB8-A9B1-430B-A898-5252DF7D114D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.API", "BookStore.API\BookStore.API.csproj", "{0A739F0D-6D68-4111-A96B-1BC27FC191D2}"
 EndProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Business.Tests", "BookStore.Business.Tests\BookStore.Business.Tests.csproj", "{AAFBA870-DE3E-42F2-B766-2F354B962E9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Data.Abstraction", "BookStore.Data.Abstraction\BookStore.Data.Abstraction.csproj", "{29F55A55-4DD7-4CD0-A561-D962DAE13FA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data.Abstraction", "BookStore.Data.Abstraction\BookStore.Data.Abstraction.csproj", "{29F55A55-4DD7-4CD0-A561-D962DAE13FA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

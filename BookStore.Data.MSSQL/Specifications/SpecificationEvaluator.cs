@@ -3,7 +3,7 @@ using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace BookStore.Data.Specifications
+namespace BookStore.Data.MSSQL.Specifications
 {
     public class SpecificationEvaluator<T> where T : BaseEntity
     {

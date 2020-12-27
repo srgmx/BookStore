@@ -1,7 +1,7 @@
 ﻿using BookStore.Domain;
 using System;
 
-namespace BookStore.Data.Specifications
+namespace BookStore.Data.MSSQL.Specifications
 {
     public class AuthorByUserIdSpecification : BaseSpecification<Author>
     {

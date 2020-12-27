@@ -1,13 +1,13 @@
 ﻿using BookStore.Data.Contracts;
-using BookStore.Data.Persistance;
-using BookStore.Data.Specifications;
+using BookStore.Data.MSSQL.Persistance;
+using BookStore.Data.MSSQL.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookStore.Data.Infrastructure
+namespace BookStore.Data.MSSQL.Infrastructure
 {
     public class AuthorRepository : GenericRepository<Author>, IAuthorRepository
     {

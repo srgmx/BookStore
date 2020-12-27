@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace BookStore.Data.Persistance
+namespace BookStore.Data.MSSQL.Persistance
 {
     public class BookStoreDbContext : DbContext
     {

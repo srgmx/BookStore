@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BookStore.Data.Migrations.BookStore
+namespace BookStore.Data.MSSQL.Migrations.BookStore
 {
     public partial class InitialDomainModel : Migration
     {

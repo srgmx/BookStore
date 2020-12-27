@@ -1,6 +1,6 @@
 ﻿using BookStore.Data.Contracts;
-using BookStore.Data.Infrastructure;
-using BookStore.Data.Persistance;
+using BookStore.Data.MSSQL.Infrastructure;
+using BookStore.Data.MSSQL.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
