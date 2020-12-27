@@ -5,6 +5,7 @@ using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookStore.Data.Infrastructure
@@ -40,6 +41,22 @@ namespace BookStore.Data.Infrastructure
             bookInDb.Authors.Add(authorInDb);
 
             return bookInDb;
+        }
+
+        public async Task<IEnumerable<Book>> GetBooksAsync()
+        {
+            var specification = new BookWithAuthorsSpecification();
+            var books = await GetAllAsync(specification);
+
+            return books;
+        }
+
+        public async Task<Book> GetBookByIdAsync(Guid bookId)
+        {
+            var specification = new BookWithAuthorsSpecification(bookId);
+            var book = await GetAsync(specification);
+
+            return book;
         }
     }
 }

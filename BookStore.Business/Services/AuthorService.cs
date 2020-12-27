@@ -2,7 +2,6 @@
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Data.Contracts;
-using BookStore.Data.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -32,8 +31,7 @@ namespace BookStore.Business.Services
 
         public async Task<IEnumerable<AuthorDto>> GetAuthorsAsync()
         {
-            var specification = new AuthorWithUserAndBooksSpecification();
-            var authors = await _unitOfWork.AuthorRepository.GetAllAsync(specification);
+            var authors = await _unitOfWork.AuthorRepository.GetAuthorsAsync();
             var authorsToReturn = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorDto>>(authors);
             _logger.LogInformation("Authors are received: {Data}", JsonSerializer.Serialize(authorsToReturn));
 
@@ -42,8 +40,7 @@ namespace BookStore.Business.Services
 
         public async Task<AuthorDto> GetAuthorByIdAsync(Guid id)
         {
-            var specification = new AuthorWithUserAndBooksSpecification(id);
-            var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(specification);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetAuthorByIdAsync(id);
             CheckAuthorExists(authorInDb);
             var authorToReturn = _mapper.Map<Author, AuthorDto>(authorInDb);
             _logger.LogInformation("Author is received: {Data}", JsonSerializer.Serialize(authorToReturn));
@@ -53,8 +50,7 @@ namespace BookStore.Business.Services
 
         public async Task<AuthorDto> AddAuthorAsync(AuthorToAddDto author)
         {
-            var specification = new AuthorByUserIdSpecification(author.UserId);
-            var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(specification);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetAuhorByUserIdAsync(author.UserId);
 
             if (authorInDb != null)
             {
@@ -75,8 +71,7 @@ namespace BookStore.Business.Services
 
         public async Task<AuthorDto> UpdateAuthorAsync(AuthorToUpdateDto author)
         {
-            var specification = new AuthorWithUserAndBooksSpecification(author.Id);
-            var authorInDb = await _unitOfWork.AuthorRepository.GetAsync(specification);
+            var authorInDb = await _unitOfWork.AuthorRepository.GetAuthorByIdAsync(author.Id);
             CheckAuthorExists(authorInDb);
             var authorToUpdate = _mapper.Map<AuthorToUpdateDto, Author>(author);
             authorInDb = await _unitOfWork.AuthorRepository.UpdateAsync(authorToUpdate);

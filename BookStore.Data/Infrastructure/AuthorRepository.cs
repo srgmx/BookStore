@@ -4,6 +4,7 @@ using BookStore.Data.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookStore.Data.Infrastructure
@@ -37,6 +38,38 @@ namespace BookStore.Data.Infrastructure
             authorInDb.Books.Add(bookInDb);
 
             return authorInDb;
+        }
+
+        public async Task<IEnumerable<Author>> GetAuthorByIdRangeAsync(IEnumerable<Guid> authorsIds)
+        {
+            var specification = new AuthorsByIdRangeSpecification(authorsIds);
+            var authors = await GetAllAsync(specification);
+
+            return authors;
+        }
+
+        public async Task<Author> GetAuhorByUserIdAsync(Guid userId)
+        {
+            var specification = new AuthorByUserIdSpecification(userId);
+            var author = await GetAsync(specification);
+
+            return author;
+        }
+
+        public async Task<IEnumerable<Author>> GetAuthorsAsync()
+        {
+            var specification = new AuthorWithUserAndBooksSpecification();
+            var authors = await GetAllAsync(specification);
+
+            return authors;
+        }
+
+        public async Task<Author> GetAuthorByIdAsync(Guid authorId)
+        {
+            var specification = new AuthorWithUserAndBooksSpecification(authorId);
+            var author = await GetAsync(specification);
+
+            return author;
         }
 
         protected override Author SetModification(Author entityInDb, Author entity)

@@ -1,5 +1,6 @@
 ﻿using BookStore.Domain;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookStore.Data.Contracts
@@ -7,5 +8,9 @@ namespace BookStore.Data.Contracts
     public interface IBookRepopository : IGenericRepository<Book>
     {
         Task<Book> AddAuthorToBookAsync(Guid bookId, Guid authorId);
+
+        Task<IEnumerable<Book>> GetBooksAsync();
+
+        Task<Book> GetBookByIdAsync(Guid bookId);
     }
 }

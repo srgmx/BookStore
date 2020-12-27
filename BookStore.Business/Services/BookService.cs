@@ -2,7 +2,6 @@
 using BookStore.Business.Contracts;
 using BookStore.Business.Dto;
 using BookStore.Data.Contracts;
-using BookStore.Data.Specifications;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -33,8 +32,7 @@ namespace BookStore.Business.Services
 
         public async Task<IEnumerable<BookDto>> GetBooksAsync()
         {
-            var specification = new BookWithAuthorsSpecification();
-            var books = await _unitOfWork.BookRepository.GetAllAsync(specification);
+            var books = await _unitOfWork.BookRepository.GetBooksAsync();
             var booksToReturn = _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(books);
             _logger.LogInformation("Books are received: {Data}", JsonSerializer.Serialize(booksToReturn));
 
@@ -43,8 +41,7 @@ namespace BookStore.Business.Services
 
         public async Task<BookDto> GetBookAsync(Guid id)
         {
-            var specification = new BookWithAuthorsSpecification(id);
-            var book = await _unitOfWork.BookRepository.GetAsync(specification);
+            var book = await _unitOfWork.BookRepository.GetBookByIdAsync(id);
             CheckBookExists(book);
             var bookToReturn = _mapper.Map<Book, BookDto>(book);
             _logger.LogInformation("Book is received: {Data}", JsonSerializer.Serialize(bookToReturn));
@@ -54,8 +51,7 @@ namespace BookStore.Business.Services
 
         public async Task<BookDto> AddBookAsync(BookToAddDto book)
         {
-            var specification = new AuthorsByIdRangeSpecification(book.AuthorIds);
-            var authors = await _unitOfWork.AuthorRepository.GetAllAsync(specification);
+            var authors = await _unitOfWork.AuthorRepository.GetAuthorByIdRangeAsync(book.AuthorIds);
             _logger.LogInformation("Authors are available in the database: {Data}", authors);
 
             if (authors.Count() != book.AuthorIds.Count())
