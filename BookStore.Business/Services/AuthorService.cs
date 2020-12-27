@@ -84,7 +84,7 @@ namespace BookStore.Business.Services
 
         public async Task<bool> RemoveAuthorAsync(Guid id)
         {
-            _unitOfWork.AuthorRepository.Remove(id);
+            await _unitOfWork.AuthorRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
             _logger.LogInformation($"Author with id {id} is removed.");
 

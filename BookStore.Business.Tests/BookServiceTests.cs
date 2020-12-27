@@ -40,7 +40,7 @@ namespace BookStore.Business.Tests
             // Arrange
             var authors = GetAuthorsList();
             _authorRepositoryMock
-                .Setup(b => b.GetAllAsync(It.IsAny<ISpecification<Author>>()))
+                .Setup(b => b.GetAuthorByIdRangeAsync(It.IsAny<IEnumerable<Guid>>()))
                 .ReturnsAsync(authors);
             var bookDto = new BookToAddDto()
             {

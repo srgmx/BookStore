@@ -61,7 +61,7 @@ namespace BookStore.Business.Services
 
         public async Task<bool> RemoveUserByIdAsync(Guid id)
         {
-            _unitOfWork.UserRepository.Remove(id);
+            await _unitOfWork.UserRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
             _logger.LogInformation($"Users with id {id} is removed.");
 

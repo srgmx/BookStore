@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BookStore.Data.Infrastructure
@@ -28,14 +29,19 @@ namespace BookStore.Data.Infrastructure
             return entity;
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria = null)
         {
-            return await ApplySpecification(specification).ToListAsync();
+            if (criteria == null)
+            {
+                return await _entities.ToListAsync();
+            }
+
+            return await _entities.Where(criteria).ToListAsync();
         }
 
-        public virtual async Task<TEntity> GetAsync(ISpecification<TEntity> specification = null)
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> criteria)
         {
-            return await ApplySpecification(specification).FirstOrDefaultAsync();
+            return await _entities.Where(criteria).FirstOrDefaultAsync();
         }
 
         public virtual async Task<TEntity> GetByIdAsync(Guid id)
@@ -43,15 +49,19 @@ namespace BookStore.Data.Infrastructure
             return await _entities.FindAsync(id);
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual Task RemoveAsync(TEntity entity)
         {
             _entities.Remove(entity);
+
+            return Task.CompletedTask;
         }
 
-        public virtual void Remove(Guid id)
+        public virtual Task RemoveAsync(Guid id)
         {
             var entity = new TEntity() { Id = id };
             _entities.Remove(entity);
+
+            return Task.CompletedTask;
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)
@@ -90,6 +100,16 @@ namespace BookStore.Data.Infrastructure
 
             return SpecificationEvaluator<TEntity>
                 .GetQuery(_entities.AsQueryable(), specification);
+        }
+
+        protected virtual async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification = null)
+        {
+            return await ApplySpecification(specification).ToListAsync();
+        }
+
+        protected async Task<TEntity> GetAsync(ISpecification<TEntity> specification = null)
+        {
+            return await ApplySpecification(specification).FirstOrDefaultAsync();
         }
     }
 }
