@@ -79,7 +79,8 @@ namespace BookStore.Data.Mongo
         {
             _context.AddCommand(async () =>
             {
-                await _collection.DeleteOneAsync(_context.Session, e => e.Id == id);
+                var filter = Builders<TEntity>.Filter.Eq(e => e.Id, id);
+                await _collection.DeleteOneAsync(_context.Session, filter);
             });
 
             return Task.CompletedTask;
