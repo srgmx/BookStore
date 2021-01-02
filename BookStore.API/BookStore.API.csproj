@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookStore.Data.Mongo\BookStore.Data.Mongo.csproj" />
     <ProjectReference Include="..\BookStore.Data.MSSQL\BookStore.Data.MSSQL.csproj" />
     <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
     <ProjectReference Include="..\BookStore.Business\BookStore.Business.csproj" />
