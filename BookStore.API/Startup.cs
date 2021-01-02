@@ -30,6 +30,8 @@ namespace BookStore.API
             services.AddMapping();
             services.AddSwagger();
             services.AddControllers();
+            services.AddMongoDataPersistance(_config);
+            services.AddMongoDataInfrastrucure();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

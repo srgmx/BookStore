@@ -18,7 +18,7 @@ namespace BookStore.Data.Mongo
         public GenericRepository(BookStoreDbContext context)
         {
             _context = context;
-            _collection = _context.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+            _collection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria = null)
@@ -50,19 +50,24 @@ namespace BookStore.Data.Mongo
             return entity;
         }
 
-        public virtual async Task<TEntity> AddAsync(TEntity entity)
+        public virtual Task<TEntity> AddAsync(TEntity entity)
         {
-            await _collection.InsertOneAsync(entity);
+            _context.AddCommand(async () => {
+                await _collection.InsertOneAsync(_context.Session, entity);
+            });
 
-            return entity;
+            return Task.FromResult(entity);
         }
 
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var filter = Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id);
-            var entityInDb = await _collection.ReplaceOneAsync(filter, entity);
+            _context.AddCommand(async () =>
+            {
+                var filter = Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id);
+                var entityInDb = await _collection.ReplaceOneAsync(_context.Session, filter, entity);
+            });
 
-            return entity;
+            return Task.FromResult(entity);
         }
 
         public async Task RemoveAsync(TEntity entity)
@@ -70,9 +75,14 @@ namespace BookStore.Data.Mongo
             await RemoveAsync(entity.Id);
         }
 
-        public async Task RemoveAsync(Guid id)
+        public Task RemoveAsync(Guid id)
         {
-            await _collection.DeleteOneAsync(e => e.Id == id);
+            _context.AddCommand(async () =>
+            {
+                await _collection.DeleteOneAsync(_context.Session, e => e.Id == id);
+            });
+
+            return Task.CompletedTask;
         }
     }
 }

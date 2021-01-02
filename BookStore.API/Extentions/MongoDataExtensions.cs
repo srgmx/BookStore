@@ -12,11 +12,9 @@ namespace BookStore.API.Extensions
 
         public static IServiceCollection AddMongoDataPersistance(this IServiceCollection services, IConfiguration _config)
         {
-            BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
-
             services.AddSingleton<IMongoClient>(s => 
                 new MongoClient(_config.GetConnectionString("MongoBookStoreDb")));
-            services.AddScoped(s => 
+            services.AddScoped(s =>
                 new BookStoreDbContext(s.GetRequiredService<IMongoClient>(), _config["MongoBookStoreDbName"]));
 
             return services;
@@ -24,7 +22,8 @@ namespace BookStore.API.Extensions
 
         public static IServiceCollection AddMongoDataInfrastrucure(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

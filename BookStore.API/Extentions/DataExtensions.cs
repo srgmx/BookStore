@@ -20,9 +20,9 @@ namespace BookStore.API.Extensions
         public static IServiceCollection AddDataInfrastrucure(this IServiceCollection services)
         {
             services.AddScoped<IAuthorRepository, AuthorRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            //services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBookRepopository, BookRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
