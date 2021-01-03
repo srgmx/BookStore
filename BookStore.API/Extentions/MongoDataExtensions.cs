@@ -23,6 +23,7 @@ namespace BookStore.API.Extensions
         public static IServiceCollection AddMongoDataInfrastrucure(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

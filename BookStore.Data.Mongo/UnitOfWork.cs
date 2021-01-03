@@ -28,7 +28,18 @@ namespace BookStore.Data.Mongo
             }
         }
 
-        public IAuthorRepository AuthorRepository => throw new System.NotImplementedException();
+        public IAuthorRepository AuthorRepository
+        {
+            get
+            {
+                if (_authorRepository == null)
+                {
+                    _authorRepository = new AuthorRepository(_context);
+                }
+
+                return _authorRepository;
+            }
+        }
 
         public IBookRepopository BookRepository => throw new System.NotImplementedException();
 

@@ -1,6 +1,7 @@
 ﻿using BookStore.Data.Abstraction;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,11 @@ namespace BookStore.Data.Mongo
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
+        private readonly BookStoreDbContext _context;
+
         public UserRepository(BookStoreDbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task<User> AddPermissionsAsync(Guid userId, IEnumerable<string> permissions)
@@ -28,6 +32,22 @@ namespace BookStore.Data.Mongo
             await UpdateAsync(userInDb);
 
             return userInDb;
+        }
+
+        public override Task RemoveAsync(Guid id)
+        {
+            _context.AddCommand(async () =>
+            {
+                var userFilter = Builders<User>.Filter.Eq(u => u.Id, id);
+                await _context.Users.DeleteOneAsync(_context.Session, userFilter);
+            });
+            _context.AddCommand(async () =>
+            {
+                var authorFilter = Builders<Author>.Filter.Eq(a => a.UserId, id);
+                await _context.Authors.DeleteOneAsync(_context.Session, authorFilter);
+            });
+
+            return Task.CompletedTask;
         }
 
         public async Task<User> RemovePermissionsAsync(Guid userId, IEnumerable<string> permissions)

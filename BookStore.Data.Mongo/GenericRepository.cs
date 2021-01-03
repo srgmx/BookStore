@@ -21,7 +21,7 @@ namespace BookStore.Data.Mongo
             _collection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria = null)
         {
             if (criteria == null)
             {
@@ -34,7 +34,7 @@ namespace BookStore.Data.Mongo
             return entities;
         }
 
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> criteria)
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> criteria)
         {
             var cursor = await _collection.FindAsync(criteria);
             var entity = await cursor.FirstOrDefaultAsync();
@@ -70,12 +70,12 @@ namespace BookStore.Data.Mongo
             return Task.FromResult(entity);
         }
 
-        public async Task RemoveAsync(TEntity entity)
+        public virtual async Task RemoveAsync(TEntity entity)
         {
             await RemoveAsync(entity.Id);
         }
 
-        public Task RemoveAsync(Guid id)
+        public virtual Task RemoveAsync(Guid id)
         {
             _context.AddCommand(async () =>
             {
