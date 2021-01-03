@@ -1,5 +1,6 @@
 ﻿using BookStore.Domain;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace BookStore.Data.Mongo
         {
             _client = client;
             _commands = new List<Func<Task>>();
+            RegisterConventions();
             SetDatabase(databaseName);
         }
 
@@ -69,6 +71,17 @@ namespace BookStore.Data.Mongo
                 GuidRepresentation = GuidRepresentation.Standard
             };
             Database = _client.GetDatabase(databaseName, databaseSettings);
+        }
+
+        private void RegisterConventions()
+        {
+            var conventionName = "BookStoreDbConventions";
+            var conventionPack = new ConventionPack
+            {
+                new CamelCaseElementNameConvention(),
+                new IgnoreIfNullConvention(true)
+            };
+            ConventionRegistry.Register(conventionName, conventionPack, t => true);
         }
     }
 }
