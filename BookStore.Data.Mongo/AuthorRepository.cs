@@ -1,6 +1,8 @@
 ﻿using BookStore.Data.Abstraction;
 using BookStore.Domain;
 using BookStore.Domain.Exceptions;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ namespace BookStore.Data.Mongo
         {
             var userCursor = await _context.Users.FindAsync(u => u.Id == entity.UserId);
             var user = await userCursor.SingleOrDefaultAsync();
+            user.Permissions = null;
 
             if (user == null)
             {
@@ -65,7 +68,13 @@ namespace BookStore.Data.Mongo
 
         public async Task<Author> GetAuthorByIdAsync(Guid authorId)
         {
-            var author = await GetByIdAsync(authorId);
+            var lookUpBsonDoc = GetLookUpBsonDoc();
+            var matchBsonDoc = new BsonDocument("$match", new BsonDocument("_id", authorId));
+            var pipeline = new BsonDocument[] { lookUpBsonDoc, matchBsonDoc };
+            var aggregationCursor = await _context.Authors.AggregateAsync<BsonDocument>(pipeline);
+            var authorBson = await aggregationCursor.FirstOrDefaultAsync();
+            var authorJson = authorBson.ToJson();
+            var author = BsonSerializer.Deserialize<Author>(authorJson);
 
             return author;
         }
@@ -81,7 +90,52 @@ namespace BookStore.Data.Mongo
 
         public async Task<IEnumerable<Author>> GetAuthorsAsync()
         {
-            return  await GetAllAsync();
+            var lookUpBsonDoc = GetLookUpBsonDoc();
+            var pipeline = new BsonDocument[] { lookUpBsonDoc };
+            var aggregationCursor = await _context.Authors.AggregateAsync<BsonDocument>(pipeline);
+            var authorsBson = await aggregationCursor.ToListAsync();
+            var authorsJson = authorsBson.ToJson();
+            var authors = BsonSerializer.Deserialize<List<Author>>(authorsJson);
+
+            return authors;
+        }
+
+        public override Task RemoveAsync(Guid id)
+        {
+            _context.AddCommand(async () =>
+            {
+                // Author cascade deletion
+                var authorFilter = Builders<Author>.Filter.Eq(a => a.Id, id);
+                await _context.Authors.DeleteOneAsync(_context.Session, authorFilter);
+
+                // Update books, cascade deletion of references on author
+                var booksFilter = Builders<Book>.Filter
+                    .ElemMatch(book => book.Authors, author => author.Id == id);
+                var authorPullFilter = Builders<Author>.Filter
+                    .Eq(author => author.Id, id);
+                var booksUpdateDefinition = Builders<Book>.Update
+                    .PullFilter(book => book.Authors, authorPullFilter);
+                await _context.Books.UpdateManyAsync(_context.Session, booksFilter, booksUpdateDefinition);
+            });
+
+            return Task.CompletedTask;
+        }
+
+        private static BsonDocument GetLookUpBsonDoc()
+        {
+            return new BsonDocument
+            {
+                {
+                    "$lookup",
+                    new BsonDocument
+                    {
+                        { "from", typeof(Book).Name },
+                        { "localField", "_id" },
+                        { "foreignField", "authors._id" },
+                        { "as", "books" }
+                    }
+                }
+            };
         }
     }
 }

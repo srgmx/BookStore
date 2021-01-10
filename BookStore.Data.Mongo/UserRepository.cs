@@ -34,6 +34,33 @@ namespace BookStore.Data.Mongo
             return userInDb;
         }
 
+        public override Task<User> UpdateAsync(User entity)
+        {
+            _context.AddCommand(async () =>
+            {
+                var userFilter = Builders<User>.Filter.Eq(user => user.Id, entity.Id);
+                var userUpdateDefinition = Builders<User>.Update.Combine(
+                    Builders<User>.Update.Set(user => user.FirstName, entity.FirstName),
+                    Builders<User>.Update.Set(user => user.LastName, entity.LastName)
+                );
+                var userOptions = new FindOneAndUpdateOptions<User>()
+                {
+                    ReturnDocument = ReturnDocument.After
+                };
+                entity = await _context.Users
+                    .FindOneAndUpdateAsync(_context.Session, userFilter, userUpdateDefinition, userOptions);
+
+                var authorFilter = Builders<Author>.Filter.Eq(author => author.UserId, entity.Id);
+                var authorUpdateDefinition = Builders<Author>.Update.Combine(
+                    Builders<Author>.Update.Set(author => author.User.FirstName, entity.FirstName),
+                    Builders<Author>.Update.Set(author => author.User.LastName, entity.LastName)
+                );
+                await _context.Authors.UpdateOneAsync(_context.Session, authorFilter, authorUpdateDefinition);
+            });
+
+            return Task.FromResult(entity);
+        }
+
         public override Task RemoveAsync(Guid id)
         {
             _context.AddCommand(async () =>
