@@ -24,6 +24,7 @@ namespace BookStore.API.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepopository, BookRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

@@ -24,14 +24,12 @@ namespace BookStore.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataPersistance(_config);
-            services.AddDataInfrastrucure();
+            services.AddMongoDataPersistance(_config);
+            services.AddMongoDataInfrastrucure();
             services.AddBusinessServices();
             services.AddMapping();
             services.AddSwagger();
             services.AddControllers();
-            services.AddMongoDataPersistance(_config);
-            services.AddMongoDataInfrastrucure();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

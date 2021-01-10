@@ -70,9 +70,13 @@ namespace BookStore.Data.Mongo
             return author;
         }
 
-        public Task<IEnumerable<Author>> GetAuthorByIdRangeAsync(IEnumerable<Guid> authorsIds)
+        public async Task<IEnumerable<Author>> GetAuthorByIdRangeAsync(IEnumerable<Guid> authorsIds)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Author>.Filter.In(a => a.Id, authorsIds);
+            var authorsCursor = await _context.Authors.FindAsync(filter);
+            var authors = await authorsCursor.ToListAsync();
+
+            return authors;
         }
 
         public async Task<IEnumerable<Author>> GetAuthorsAsync()

@@ -41,7 +41,18 @@ namespace BookStore.Data.Mongo
             }
         }
 
-        public IBookRepopository BookRepository => throw new System.NotImplementedException();
+        public IBookRepopository BookRepository
+        {
+            get
+            {
+                if (_bookRepopository == null)
+                {
+                    _bookRepopository = new BookRepository(_context);
+                }
+
+                return _bookRepopository;
+            }
+        }
 
         public async Task SaveAsync()
         {
