@@ -38,13 +38,22 @@ namespace BookStore.Data.Mongo
         {
             _context.AddCommand(async () =>
             {
+                // Delete user
                 var userFilter = Builders<User>.Filter.Eq(u => u.Id, id);
                 await _context.Users.DeleteOneAsync(_context.Session, userFilter);
-            });
-            _context.AddCommand(async () =>
-            {
+
+                // Author cascade deletion
                 var authorFilter = Builders<Author>.Filter.Eq(a => a.UserId, id);
                 await _context.Authors.DeleteOneAsync(_context.Session, authorFilter);
+
+                // Update books, cascade deletion of references on author
+                var booksFilter = Builders<Book>.Filter
+                    .ElemMatch(book => book.Authors, author => author.UserId == id);
+                var authorPullFilter = Builders<Author>.Filter
+                    .Eq(author => author.UserId, id);
+                var booksUpdateDefinition = Builders<Book>.Update
+                    .PullFilter(book => book.Authors, authorPullFilter);
+                await _context.Books.UpdateManyAsync(_context.Session, booksFilter, booksUpdateDefinition);
             });
 
             return Task.CompletedTask;
