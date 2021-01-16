@@ -16,7 +16,8 @@ namespace BookStore.API
         {
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
             _config = builder.Build();
         }
 
@@ -26,6 +27,7 @@ namespace BookStore.API
         {
             services.AddMongoDataPersistance(_config);
             services.AddMongoDataInfrastrucure();
+            services.CreateMongoCollectionsIfNotExist(_config);
             services.AddBusinessServices();
             services.AddMapping();
             services.AddSwagger();

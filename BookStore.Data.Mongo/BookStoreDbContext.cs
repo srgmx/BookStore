@@ -46,7 +46,7 @@ namespace BookStore.Data.Mongo
                 try
                 {
                     // TODO: Only servers in a sharded cluster can start a new transaction at the active transaction number
-                    var commandTasks = _commands.Select(c => c());
+                    var commandTasks = _commands.Select(command => command());
                     await Task.WhenAll(commandTasks);
 
                     await Session.CommitTransactionAsync();
