@@ -54,6 +54,14 @@ namespace BookStore.Business.Services
             var authors = await _unitOfWork.AuthorRepository.GetAuthorByIdRangeAsync(book.AuthorIds);
             _logger.LogInformation("Authors are available in the database: {Data}", authors);
 
+            if (!book.AuthorIds.Any())
+            {
+                var message = "Invalid author of the book in the list. Book must have at least one author.";
+                _logger.LogWarning("Invalid author of the book in the list: {Data}", JsonSerializer.Serialize(book));
+
+                throw new InvalidAuthorsException(message);
+            }
+
             if (authors.Count() != book.AuthorIds.Count())
             {
                 var message = "Invalid author of the book in the list. All authors must exist in the system.";
