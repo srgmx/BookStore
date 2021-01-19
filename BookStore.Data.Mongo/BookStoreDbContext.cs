@@ -39,13 +39,17 @@ namespace BookStore.Data.Mongo
 
         public async Task SaveChangesAsync()
         {
+            if (_commands.Count() == 0)
+            {
+                return;
+            }
+
             using (Session = await _client.StartSessionAsync())
             {
                 Session.StartTransaction();
 
                 try
                 {
-                    // TODO: Only servers in a sharded cluster can start a new transaction at the active transaction number
                     var commandTasks = _commands.Select(command => command());
                     await Task.WhenAll(commandTasks);
 

@@ -1,5 +1,6 @@
 ﻿using BookStore.Data.Abstraction;
 using BookStore.Domain;
+using BookStore.Domain.Exceptions;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -32,7 +33,9 @@ namespace BookStore.Data.Mongo
                 });
                 entity.Authors = authorsWithKeyFields.ToList();
                 await _context.Books.InsertOneAsync(_context.Session, entity);
-                
+            });
+            _context.AddCommand(async () =>
+            {
                 // Update author. Store book unique identifier
                 var bookWithKeyField = new Book()
                 {
@@ -48,9 +51,33 @@ namespace BookStore.Data.Mongo
             return Task.FromResult(entity);
         }
 
-        public Task<Book> AddAuthorToBookAsync(Guid bookId, Guid authorId)
+        public async Task<Book> AddAuthorToBookAsync(Guid bookId, Guid authorId)
         {
-            throw new NotImplementedException();
+            var bookInDb = await GetBookByIdAsync(bookId);
+
+            if (bookInDb == null)
+            {
+                throw new RecordNotFoundException("Can't add author to book. Book was not found.");
+            }
+
+            var authorInDbCursor = await _context.Authors.FindAsync(author => author.Id == authorId);
+            var authorInDb = await authorInDbCursor.SingleOrDefaultAsync();
+
+            if (authorInDb == null)
+            {
+                throw new RecordNotFoundException("Can't add author to book. Author was not found.");
+            }
+
+            var authorWithKeyFields = new Author()
+            {
+                Id = authorId,
+                UserId = authorInDb.UserId,
+                Books = null
+            };
+            bookInDb.Authors.Add(authorWithKeyFields);
+            bookInDb = await base.UpdateAsync(bookInDb);
+
+            return bookInDb;
         }
 
         public async Task<Book> GetBookByIdAsync(Guid bookId)
@@ -60,6 +87,12 @@ namespace BookStore.Data.Mongo
             var pipeline = new[] { lookUpBsonDoc, matchBsonDoc };
             var aggregationCursor = await _context.Books.AggregateAsync<BsonDocument>(pipeline);
             var bookBson = await aggregationCursor.FirstOrDefaultAsync();
+
+            if (bookBson == null)
+            {
+                return null;
+            }
+
             var bookJson = bookBson.ToJson();
             var book = BsonSerializer.Deserialize<Book>(bookJson);
 
@@ -80,19 +113,20 @@ namespace BookStore.Data.Mongo
 
         public override Task RemoveAsync(Guid id)
         {
+            var bookFilter = Builders<Book>.Filter.Eq(b => b.Id, id);
             _context.AddCommand(async () =>
             {
                 // Delete book
-                var bookFilter = Builders<Book>.Filter.Eq(b => b.Id, id);
                 await _context.Books.DeleteOneAsync(_context.Session, bookFilter);
-
+            });
+            _context.AddCommand(async () =>
+            {
                 // Update auhtors, cascade deletion of references on book
                 var auhtorsFilter = Builders<Author>.Filter
                     .ElemMatch(author => author.Books, book => book.Id == id);
                 var authorsUpdateDefiniton = Builders<Author>.Update
                     .PullFilter(author => author.Books, bookFilter);
                 await _context.Authors.UpdateManyAsync(_context.Session, auhtorsFilter, authorsUpdateDefiniton);
-
             });
 
             return Task.CompletedTask;

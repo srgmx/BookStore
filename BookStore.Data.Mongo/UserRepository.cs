@@ -27,17 +27,18 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("User was not found to add permissions.");
             }
 
-            var newPermissions = permissions.Where(p => !userInDb.Permissions.Contains(p));
+            var newPermissions = permissions.Where(permission => !userInDb.Permissions.Contains(permission));
             userInDb.Permissions.AddRange(newPermissions);
-            await UpdateAsync(userInDb);
+            userInDb = await UpdateAsync(userInDb);
 
             return userInDb;
         }
 
-        public override Task<User> UpdateAsync(User entity)
+        public async override Task<User> UpdateAsync(User entity)
         {
             _context.AddCommand(async () =>
             {
+                // Update user
                 var userFilter = Builders<User>.Filter.Eq(user => user.Id, entity.Id);
                 var userUpdateDefinition = Builders<User>.Update.Combine(
                     Builders<User>.Update.Set(user => user.FirstName, entity.FirstName),
@@ -49,7 +50,10 @@ namespace BookStore.Data.Mongo
                 };
                 entity = await _context.Users
                     .FindOneAndUpdateAsync(_context.Session, userFilter, userUpdateDefinition, userOptions);
-
+            });
+            _context.AddCommand(async () =>
+            {
+                // Update author if exists
                 var authorFilter = Builders<Author>.Filter.Eq(author => author.UserId, entity.Id);
                 var authorUpdateDefinition = Builders<Author>.Update.Combine(
                     Builders<Author>.Update.Set(author => author.User.FirstName, entity.FirstName),
@@ -57,8 +61,9 @@ namespace BookStore.Data.Mongo
                 );
                 await _context.Authors.UpdateOneAsync(_context.Session, authorFilter, authorUpdateDefinition);
             });
+            await _context.SaveChangesAsync();
 
-            return Task.FromResult(entity);
+            return entity;
         }
 
         public override Task RemoveAsync(Guid id)
@@ -66,20 +71,21 @@ namespace BookStore.Data.Mongo
             _context.AddCommand(async () =>
             {
                 // Delete user
-                var userFilter = Builders<User>.Filter.Eq(u => u.Id, id);
+                var userFilter = Builders<User>.Filter.Eq(user => user.Id, id);
                 await _context.Users.DeleteOneAsync(_context.Session, userFilter);
-
+            });
+            _context.AddCommand(async () =>
+            {
                 // Author cascade deletion
-                var authorFilter = Builders<Author>.Filter.Eq(a => a.UserId, id);
+                var authorFilter = Builders<Author>.Filter.Eq(author => author.UserId, id);
                 await _context.Authors.DeleteOneAsync(_context.Session, authorFilter);
-
+            });
+            _context.AddCommand(async () =>
+            {
                 // Update books, cascade deletion of references on author
-                var booksFilter = Builders<Book>.Filter
-                    .ElemMatch(book => book.Authors, author => author.UserId == id);
-                var authorPullFilter = Builders<Author>.Filter
-                    .Eq(author => author.UserId, id);
-                var booksUpdateDefinition = Builders<Book>.Update
-                    .PullFilter(book => book.Authors, authorPullFilter);
+                var booksFilter = Builders<Book>.Filter.ElemMatch(book => book.Authors, author => author.UserId == id);
+                var authorPullFilter = Builders<Author>.Filter.Eq(author => author.UserId, id);
+                var booksUpdateDefinition = Builders<Book>.Update.PullFilter(book => book.Authors, authorPullFilter);
                 await _context.Books.UpdateManyAsync(_context.Session, booksFilter, booksUpdateDefinition);
             });
 
@@ -95,9 +101,9 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("User was not found to remove permissions.");
             }
 
-            var updatedPermissions = userInDb.Permissions.Where(p => !permissions.Contains(p));
+            var updatedPermissions = userInDb.Permissions.Where(userPermission => !permissions.Contains(userPermission));
             userInDb.Permissions = updatedPermissions.ToList();
-            await UpdateAsync(userInDb);
+            userInDb = await UpdateAsync(userInDb);
 
             return userInDb;
         }

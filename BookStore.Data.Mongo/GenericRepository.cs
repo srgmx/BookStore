@@ -59,15 +59,18 @@ namespace BookStore.Data.Mongo
             return Task.FromResult(entity);
         }
 
-        public virtual Task<TEntity> UpdateAsync(TEntity entity)
+        public async virtual Task<TEntity> UpdateAsync(TEntity entity)
         {
+            TEntity updatedEntity = null;
+
             _context.AddCommand(async () =>
             {
                 var filter = Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id);
                 var entityInDb = await _collection.ReplaceOneAsync(_context.Session, filter, entity);
             });
+            await _context.SaveChangesAsync();
 
-            return Task.FromResult(entity);
+            return updatedEntity;
         }
 
         public virtual async Task RemoveAsync(TEntity entity)
