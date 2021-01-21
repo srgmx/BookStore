@@ -34,7 +34,7 @@ namespace BookStore.Data.Mongo
             return userInDb;
         }
 
-        public async override Task<User> UpdateAsync(User entity)
+        public override async Task<User> UpdateAsync(User entity)
         {
             _context.AddCommand(async () =>
             {

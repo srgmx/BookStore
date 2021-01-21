@@ -48,10 +48,10 @@ namespace BookStore.Business.Tests
                 AuthorIds = new List<Guid>() { Guid.Empty }
             };
 
-            //Act
-            Func<Task> addBookAction = () => _bookService.AddBookAsync(bookDto);
+            // Act
+            Task addBookAction() => _bookService.AddBookAsync(bookDto);
 
-            //Assert
+            // Assert
             await Assert.ThrowsAsync<InvalidAuthorsException>(addBookAction);
         }
 

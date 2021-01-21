@@ -19,7 +19,7 @@ namespace BookStore.Data.Mongo
             _context = context;
         }
 
-        public async override Task<Author> AddAsync(Author entity)
+        public override async Task<Author> AddAsync(Author entity)
         {
             var userInDbCursor = await _context.Users.FindAsync(user => user.Id == entity.UserId);
             var userInDb = await userInDbCursor.SingleOrDefaultAsync();
@@ -36,7 +36,7 @@ namespace BookStore.Data.Mongo
             return authorInDb;
         }
 
-        public async override Task<Author> UpdateAsync(Author entity)
+        public override async Task<Author> UpdateAsync(Author entity)
         {
             _context.AddCommand(async () =>
             {

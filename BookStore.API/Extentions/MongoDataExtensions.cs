@@ -18,8 +18,7 @@ namespace BookStore.API.Extensions
         public static IServiceCollection AddMongoDataPersistance(this IServiceCollection services, IConfiguration config)
         {
             services.AddSingleton<IMongoClient>(s => new MongoClient(ConstructConnectionString(config)));
-            services.AddScoped(s => new BookStoreDbContext(s.GetRequiredService<IMongoClient>(),
-                config.GetValue<string>(DatabaseNameSection)));
+            services.AddScoped(s => new BookStoreDbContext(s.GetRequiredService<IMongoClient>(), config.GetValue<string>(DatabaseNameSection)));
 
             return services;
         }
@@ -66,8 +65,11 @@ namespace BookStore.API.Extensions
         {
             var connectionStringPattern = config.GetConnectionString(ConnectionStringSection);
 
-            return string.Format(connectionStringPattern, config.GetValue<string>(UserSection),
-                config.GetValue<string>(PasswordSection), config.GetValue<string>(DatabaseNameSection));
+            return string.Format(
+                connectionStringPattern,
+                config.GetValue<string>(UserSection),
+                config.GetValue<string>(PasswordSection),
+                config.GetValue<string>(DatabaseNameSection));
         }
     }
 }

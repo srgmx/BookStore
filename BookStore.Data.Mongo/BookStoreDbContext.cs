@@ -55,7 +55,7 @@ namespace BookStore.Data.Mongo
 
                     await Session.CommitTransactionAsync();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     await Session.AbortTransactionAsync();
                     Session.Dispose();

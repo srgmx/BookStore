@@ -52,14 +52,15 @@ namespace BookStore.Data.Mongo
 
         public virtual Task<TEntity> AddAsync(TEntity entity)
         {
-            _context.AddCommand(async () => {
+            _context.AddCommand(async () =>
+            {
                 await _collection.InsertOneAsync(_context.Session, entity);
             });
 
             return Task.FromResult(entity);
         }
 
-        public async virtual Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             TEntity updatedEntity = null;
 

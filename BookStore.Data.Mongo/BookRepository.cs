@@ -75,7 +75,7 @@ namespace BookStore.Data.Mongo
                 Books = null
             };
             bookInDb.Authors.Add(authorWithKeyFields);
-            bookInDb = await base.UpdateAsync(bookInDb);
+            bookInDb = await UpdateAsync(bookInDb);
 
             return bookInDb;
         }
