@@ -29,7 +29,7 @@ namespace BookStore.Data.Mongo
 
             var newPermissions = permissions.Where(permission => !userInDb.Permissions.Contains(permission));
             userInDb.Permissions.AddRange(newPermissions);
-            userInDb = await UpdateAsync(userInDb);
+            userInDb = await base.UpdateAsync(userInDb);
 
             return userInDb;
         }
@@ -103,7 +103,7 @@ namespace BookStore.Data.Mongo
 
             var updatedPermissions = userInDb.Permissions.Where(userPermission => !permissions.Contains(userPermission));
             userInDb.Permissions = updatedPermissions.ToList();
-            userInDb = await UpdateAsync(userInDb);
+            userInDb = await base.UpdateAsync(userInDb);
 
             return userInDb;
         }
