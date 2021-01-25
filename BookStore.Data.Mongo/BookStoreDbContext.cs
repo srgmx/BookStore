@@ -46,44 +46,25 @@ namespace BookStore.Data.Mongo
 
             using (Session = await _client.StartSessionAsync())
             {
-                var transactionResponse = await Session.WithTransactionAsync(async (session, cancelToken) =>
+                Session.StartTransaction();
+
+                try
                 {
-                    try
-                    {
-                        var commandTasks = _commands.Select(command => command());
-                        await Task.WhenAll(commandTasks);
-                        await session.CommitTransactionAsync();
-                        var response = new MongoTransactionResponse()
-                        {
-                            Mesage = "Transaction operations were completed.",
-                            IsSuccess = true
-                        };
+                    var commandTasks = _commands.Select(command => command());
+                    await Task.WhenAll(commandTasks);
 
-                        return response;
-                    }
-                    catch (Exception e)
-                    {
-                        await session.AbortTransactionAsync();
-                        var response = new MongoTransactionResponse()
-                        {
-                            Mesage = e.Message,
-                            IsSuccess = false,
-                            Exception = e
-                        };
-
-                        return response;
-                    }
-                    finally
-                    {
-                        _commands.Clear();
-                    }
-                });
-
-                if (!transactionResponse.IsSuccess)
+                    await Session.CommitTransactionAsync();
+                }
+                catch (Exception e)
                 {
+                    await Session.AbortTransactionAsync();
                     Session.Dispose();
 
-                    throw new MongoTransactionAbortException(transactionResponse.Mesage, transactionResponse.Exception);
+                    throw new MongoTransactionAbortException($"Transaction was aborted because inner error: {e.Message}", e);
+                }
+                finally
+                {
+                    _commands.Clear();
                 }
             }
         }
