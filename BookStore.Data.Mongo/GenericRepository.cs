@@ -67,7 +67,11 @@ namespace BookStore.Data.Mongo
             _context.AddCommand(async () =>
             {
                 var filter = Builders<TEntity>.Filter.Eq(e => e.Id, entity.Id);
-                var entityInDb = await _collection.ReplaceOneAsync(_context.Session, filter, entity);
+                var options = new FindOneAndReplaceOptions<TEntity>()
+                { 
+                    ReturnDocument = ReturnDocument.After 
+                };
+                updatedEntity = await _collection.FindOneAndReplaceAsync(_context.Session, filter, entity, options);
             });
             await _context.SaveChangesAsync();
 

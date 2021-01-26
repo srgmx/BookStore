@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BookStore.Data.Mongo
@@ -63,6 +64,11 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("Can't add book to author. Author was not found.");
             }
 
+            if (authorInDb.Books.Any(book => book.Id == bookId))
+            {
+                throw new ArgumentException($"Book with id {bookId} is already assigned to book with id {authorId}.");
+            }
+
             var bookInDbCursor = await _context.Books.FindAsync(book => book.Id == bookId);
             var bookInDb = await bookInDbCursor.SingleOrDefaultAsync();
 
@@ -71,15 +77,35 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("Can't add book to author. Book was not found.");
             }
 
-            var bookWithKeyField = new Book()
+            _context.AddCommand(async () =>
             {
-                Id = bookId,
-                Authors = null
-            };
-            authorInDb.Books.Add(bookWithKeyField);
-            authorInDb = await base.UpdateAsync(authorInDb);
+                // Assign book to author
+                var bookWithKeyField = new Book()
+                {
+                    Id = bookId,
+                    Authors = null
+                };
+                var authorFilter = Builders<Author>.Filter.Eq(author => author.Id, authorId);
+                var authorUpdateDefiniton = Builders<Author>.Update.Push(author => author.Books, bookWithKeyField);
+                await _context.Authors.UpdateOneAsync(_context.Session, authorFilter, authorUpdateDefiniton);
+            });
+            _context.AddCommand(async () =>
+            {
+                // Assign auhtor to book
+                var authorWithKeyFields = new Author()
+                {
+                    Id = authorId,
+                    UserId = authorInDb.UserId,
+                    Books = null
+                };
+                var bookFilter = Builders<Book>.Filter.Eq(book => book.Id, bookId);
+                var bookUpdateDefiniton = Builders<Book>.Update.Push(book => book.Authors, authorWithKeyFields);
+                await _context.Books.UpdateOneAsync(_context.Session, bookFilter, bookUpdateDefiniton);
+            });
+            await _context.SaveChangesAsync();
+            var authorToReturn = await GetAuthorByIdAsync(authorId);
 
-            return authorInDb;
+            return authorToReturn;
         }
 
         public async Task<Author> GetAuhorByUserIdAsync(Guid userId)

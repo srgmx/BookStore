@@ -60,6 +60,11 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("Can't add author to book. Book was not found.");
             }
 
+            if (bookInDb.Authors.Any(author => author.Id == authorId))
+            {
+                throw new ArgumentException($"Author with id {authorId} is already assigned to book with id {bookId}.");
+            }
+
             var authorInDbCursor = await _context.Authors.FindAsync(author => author.Id == authorId);
             var authorInDb = await authorInDbCursor.SingleOrDefaultAsync();
 
@@ -68,16 +73,35 @@ namespace BookStore.Data.Mongo
                 throw new RecordNotFoundException("Can't add author to book. Author was not found.");
             }
 
-            var authorWithKeyFields = new Author()
+            _context.AddCommand(async () =>
             {
-                Id = authorId,
-                UserId = authorInDb.UserId,
-                Books = null
-            };
-            bookInDb.Authors.Add(authorWithKeyFields);
-            bookInDb = await UpdateAsync(bookInDb);
+                // Assign auhtor to book
+                var authorWithKeyFields = new Author()
+                {
+                    Id = authorId,
+                    UserId = authorInDb.UserId,
+                    Books = null
+                };
+                var bookFilter = Builders<Book>.Filter.Eq(book => book.Id, bookId);
+                var bookUpdateDefiniton = Builders<Book>.Update.Push(book => book.Authors, authorWithKeyFields);
+                await _context.Books.UpdateOneAsync(_context.Session, bookFilter, bookUpdateDefiniton);
+            });
+            _context.AddCommand(async () =>
+            {
+                // Assign book to author
+                var bookWithKeyField = new Book()
+                {
+                    Id = bookId,
+                    Authors = null
+                };
+                var authorFilter = Builders<Author>.Filter.Eq(author => author.Id, authorId);
+                var authorUpdateDefiniton = Builders<Author>.Update.Push(author => author.Books, bookWithKeyField);
+                await _context.Authors.UpdateOneAsync(_context.Session, authorFilter, authorUpdateDefiniton);
+            });
+            await _context.SaveChangesAsync();
+            var bookToReturn = await GetBookByIdAsync(bookId);
 
-            return bookInDb;
+            return bookToReturn;
         }
 
         public async Task<Book> GetBookByIdAsync(Guid bookId)

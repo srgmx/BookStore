@@ -51,7 +51,7 @@ namespace BookStore.Data.Mongo
                 try
                 {
                     var commandTasks = _commands.Select(command => command());
-                    await Task.WhenAll(commandTasks);
+                    foreach (var commandTask in commandTasks) { await commandTask; }
 
                     await Session.CommitTransactionAsync();
                 }
