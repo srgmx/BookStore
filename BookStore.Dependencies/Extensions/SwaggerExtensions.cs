@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookStore.API.Extensions
+namespace BookStore.Dependencies.Extensions
 {
     public static class SwaggerExtensions
     {

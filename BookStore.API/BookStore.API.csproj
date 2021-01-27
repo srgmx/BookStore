@@ -5,21 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookStore.Data.Mongo\BookStore.Data.Mongo.csproj" />
-    <ProjectReference Include="..\BookStore.Data.MSSQL\BookStore.Data.MSSQL.csproj" />
-    <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
-    <ProjectReference Include="..\BookStore.Business\BookStore.Business.csproj" />
+    <ProjectReference Include="..\BookStore.Dependencies\BookStore.Dependencies.csproj" />
   </ItemGroup>
 
 </Project>

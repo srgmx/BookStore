@@ -1,5 +1,6 @@
 ﻿using API.Middleware;
-using BookStore.API.Extensions;
+using BookStore.Dependencies;
+using BookStore.Dependencies.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,12 +26,7 @@ namespace BookStore.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMongoDataPersistance(_config);
-            services.AddMongoDataInfrastrucure();
-            services.CreateMongoCollectionsIfNotExist(_config);
-            services.AddBusinessServices();
-            services.AddMapping();
-            services.AddSwagger();
+            DependencyContainer.RegisterServices(services, _config);
             services.AddControllers();
         }
 

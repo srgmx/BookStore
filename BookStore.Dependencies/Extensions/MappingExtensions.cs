@@ -2,7 +2,7 @@
 using BookStore.Business.Mapping;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookStore.API.Extensions
+namespace BookStore.Dependencies.Extensions
 {
     public static class MappingExtensions
     {

@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data.Abstraction"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.Data.Mongo", "BookStore.Data.Mongo\BookStore.Data.Mongo.csproj", "{C231137E-AB32-40D7-A156-CA914C97B2F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.Dependencies", "BookStore.Dependencies\BookStore.Dependencies.csproj", "{CD89D891-81CD-4B20-9B5E-07E5CBB40856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{C231137E-AB32-40D7-A156-CA914C97B2F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C231137E-AB32-40D7-A156-CA914C97B2F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C231137E-AB32-40D7-A156-CA914C97B2F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD89D891-81CD-4B20-9B5E-07E5CBB40856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD89D891-81CD-4B20-9B5E-07E5CBB40856}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD89D891-81CD-4B20-9B5E-07E5CBB40856}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD89D891-81CD-4B20-9B5E-07E5CBB40856}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

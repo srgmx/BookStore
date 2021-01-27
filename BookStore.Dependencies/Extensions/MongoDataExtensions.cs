@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using System.Linq;
 
-namespace BookStore.API.Extensions
+namespace BookStore.Dependencies.Extensions
 {
     public static class MongoDataExtensions
     {

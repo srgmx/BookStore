@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookStore.API.Extensions
+namespace BookStore.Dependencies.Extensions
 {
     public static class MSSQLDataExtensions
     {
