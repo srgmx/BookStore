@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BookCoreLibrary.Domain.Models;
+using System.Collections.Generic;
 
 namespace BookStore.Domain
 {

@@ -1,5 +1,5 @@
-﻿using BookStore.Data.Abstraction;
-using BookStore.Domain;
+﻿using BookCoreLibrary.Domain.Models;
+using BookStore.Data.Abstraction;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

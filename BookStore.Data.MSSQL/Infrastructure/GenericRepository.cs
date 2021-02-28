@@ -1,6 +1,6 @@
-﻿using BookStore.Data.Abstraction;
+﻿using BookCoreLibrary.Domain.Models;
+using BookStore.Data.Abstraction;
 using BookStore.Data.MSSQL.Specifications;
-using BookStore.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

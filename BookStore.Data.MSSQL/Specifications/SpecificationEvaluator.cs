@@ -1,5 +1,5 @@
-﻿using BookStore.Data.Abstraction;
-using BookStore.Domain;
+﻿using BookCoreLibrary.Domain.Models;
+using BookStore.Data.Abstraction;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
