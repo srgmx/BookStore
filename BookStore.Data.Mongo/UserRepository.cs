@@ -42,7 +42,8 @@ namespace BookStore.Data.Mongo
                 var userFilter = Builders<User>.Filter.Eq(user => user.Id, entity.Id);
                 var userUpdateDefinition = Builders<User>.Update.Combine(
                     Builders<User>.Update.Set(user => user.FirstName, entity.FirstName),
-                    Builders<User>.Update.Set(user => user.LastName, entity.LastName)
+                    Builders<User>.Update.Set(user => user.LastName, entity.LastName),
+                    Builders<User>.Update.Set(user => user.Email, entity.Email)
                 );
                 var userOptions = new FindOneAndUpdateOptions<User>()
                 {
@@ -57,7 +58,8 @@ namespace BookStore.Data.Mongo
                 var authorFilter = Builders<Author>.Filter.Eq(author => author.UserId, entity.Id);
                 var authorUpdateDefinition = Builders<Author>.Update.Combine(
                     Builders<Author>.Update.Set(author => author.User.FirstName, entity.FirstName),
-                    Builders<Author>.Update.Set(author => author.User.LastName, entity.LastName)
+                    Builders<Author>.Update.Set(author => author.User.LastName, entity.LastName),
+                    Builders<Author>.Update.Set(author => author.User.Email, entity.Email)
                 );
                 await _context.Authors.UpdateOneAsync(_context.Session, authorFilter, authorUpdateDefinition);
             });

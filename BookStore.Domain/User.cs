@@ -14,6 +14,8 @@ namespace BookStore.Domain
 
         public string LastName { get; set; }
 
+        public string Email { get; set; }
+
         public Author Author { get; set; }
 
         public List<string> Permissions { get; set; }
