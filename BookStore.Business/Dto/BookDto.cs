@@ -9,6 +9,14 @@ namespace BookStore.Business.Dto
 
         public string Name { get; set; }
 
+        public string Articul { get; set; }
+
+        public int AvailableQuantity { get; set; }
+
+        public decimal Price { get; set; }
+
+        public string PublishedAt { get; set; }
+
         public IEnumerable<BookAuthorDto> Authors { get; set; }
     }
 }
