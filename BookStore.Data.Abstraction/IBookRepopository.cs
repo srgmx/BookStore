@@ -11,6 +11,8 @@ namespace BookStore.Data.Abstraction
 
         Task<IEnumerable<Book>> GetBooksAsync();
 
+        Task<IEnumerable<Book>> GetBooksByIdRangeAsync(IEnumerable<Guid> bookIds);
+
         Task<Book> GetBookByIdAsync(Guid bookId);
     }
 }

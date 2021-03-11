@@ -37,9 +37,17 @@ namespace BookStore.API.Controllers
             return Ok(book);
         }
 
+        [HttpPost("idRange")]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooksByIdRangeAsync([FromBody] IEnumerable<Guid> bookIds)
+        {
+            var books = await _bookService.GetBooksByIdRangeAsync(bookIds);
+
+            return Ok(books);
+        }
+
         // POST api/books
         [HttpPost]
-        public async Task<ActionResult<BookDto>> CreateBook([FromBody] BookToAddDto book)
+        public async Task<ActionResult<BookDto>> CreateBookAsync([FromBody] BookToAddDto book)
         {
             var newBook = await _bookService.AddBookAsync(book);
             var uri = Request.GetCreatedUri(newBook.Id);

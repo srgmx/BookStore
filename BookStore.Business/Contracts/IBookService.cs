@@ -11,6 +11,8 @@ namespace BookStore.Business.Contracts
 
         Task<BookDto> GetBookAsync(Guid id);
 
+        Task<IEnumerable<BookDto>> GetBooksByIdRangeAsync(IEnumerable<Guid> bookIds);
+
         Task<BookDto> AddBookAsync(BookToAddDto book);
 
         Task<bool> RemoveBookAsync(Guid id);

@@ -58,5 +58,10 @@ namespace BookStore.Data.MSSQL.Infrastructure
 
             return book;
         }
+
+        public Task<IEnumerable<Book>> GetBooksByIdRangeAsync(IEnumerable<Guid> bookIds)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

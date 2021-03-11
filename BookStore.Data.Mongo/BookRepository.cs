@@ -106,7 +106,7 @@ namespace BookStore.Data.Mongo
 
         public async Task<Book> GetBookByIdAsync(Guid bookId)
         {
-            var lookUpBsonDoc = GetLookUpBsonDoc();
+            var lookUpBsonDoc = new BooksWithAuthorsBsonSpecification().Specification;
             var matchBsonDoc = new BsonDocument("$match", new BsonDocument("_id", bookId));
             var pipeline = new[] { lookUpBsonDoc, matchBsonDoc };
             var aggregationCursor = await _context.Books.AggregateAsync<BsonDocument>(pipeline);
@@ -125,8 +125,21 @@ namespace BookStore.Data.Mongo
 
         public async Task<IEnumerable<Book>> GetBooksAsync()
         {
-            var lookUpBsonDoc = GetLookUpBsonDoc();
+            var lookUpBsonDoc = new BooksWithAuthorsBsonSpecification().Specification;
             var pipeline = new[] { lookUpBsonDoc };
+            var aggregationCursor = await _context.Books.AggregateAsync<BsonDocument>(pipeline);
+            var booksBson = await aggregationCursor.ToListAsync();
+            var booksJson = booksBson.ToJson();
+            var books = BsonSerializer.Deserialize<List<Book>>(booksJson);
+
+            return books;
+        }
+
+        public async Task<IEnumerable<Book>> GetBooksByIdRangeAsync(IEnumerable<Guid> bookIds)
+        {
+            var lookUpBsonDoc = new BooksWithAuthorsBsonSpecification().Specification;
+            var matchBsonDoc = new BooksByIdRangeBsonSpecification(bookIds).Specification;
+            var pipeline = new List<BsonDocument> { lookUpBsonDoc, matchBsonDoc };
             var aggregationCursor = await _context.Books.AggregateAsync<BsonDocument>(pipeline);
             var booksBson = await aggregationCursor.ToListAsync();
             var booksJson = booksBson.ToJson();
@@ -154,23 +167,6 @@ namespace BookStore.Data.Mongo
             });
 
             return Task.CompletedTask;
-        }
-
-        private static BsonDocument GetLookUpBsonDoc()
-        {
-            return new BsonDocument
-            {
-                {
-                    "$lookup",
-                    new BsonDocument
-                    {
-                        { "from", typeof(Author).Name },
-                        { "localField", "authors._id" },
-                        { "foreignField", "_id" },
-                        { "as", "authors" }
-                    }
-                }
-            };
         }
     }
 }

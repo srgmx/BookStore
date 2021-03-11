@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BookCoreLibrary.Data.Mongo" Version="1.0.0--16" />
+    <PackageReference Include="BookCoreLibrary.Data.Mongo" Version="1.0.0--21" />
+    <PackageReference Include="PluralizeService.Core" Version="1.2.21070.12" />
   </ItemGroup>
 
   <ItemGroup>

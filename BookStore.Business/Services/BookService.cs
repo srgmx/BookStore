@@ -49,6 +49,15 @@ namespace BookStore.Business.Services
             return bookToReturn;
         }
 
+        public async Task<IEnumerable<BookDto>> GetBooksByIdRangeAsync(IEnumerable<Guid> bookIds)
+        {
+            var books = await _unitOfWork.BookRepository.GetBooksByIdRangeAsync(bookIds);
+            var booksToReturn = _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(books);
+            _logger.LogInformation("Books are received: {Data}", JsonSerializer.Serialize(booksToReturn));
+
+            return booksToReturn;
+        }
+
         public async Task<BookDto> AddBookAsync(BookToAddDto book)
         {
             var authors = await _unitOfWork.AuthorRepository.GetAuthorByIdRangeAsync(book.AuthorIds);
