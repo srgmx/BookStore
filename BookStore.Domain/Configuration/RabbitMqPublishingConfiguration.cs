@@ -7,5 +7,6 @@ namespace BookStore.Domain.Configuration
     /// </summary>
     public class RabbitMqPublishingConfiguration
     {
+        public TopicDestinationConfiguration OrderReservedTopic { get; set; }
     }
 }

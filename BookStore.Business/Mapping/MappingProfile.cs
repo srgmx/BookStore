@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BookStore.Business.Dto;
 using BookStore.Domain;
+using BookStore.Domain.Commands;
+using BookStore.Domain.Events;
 
 namespace BookStore.Business.Mapping
 {
@@ -50,6 +52,9 @@ namespace BookStore.Business.Mapping
                 .ForMember(d => d.Authors, o => o.Ignore());
 
             CreateMap<Book, BookDto>();
+
+            CreateMap<AckOrderReservedCommand, OrderReservedEvent>()
+                .ForMember(d => d.MessageType, o => o.Ignore());
         }
     }
 }

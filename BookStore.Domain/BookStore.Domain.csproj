@@ -9,8 +9,4 @@
     <PackageReference Include="BookCoreLibrary.EventBus.Core" Version="1.0.0--24" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
-
 </Project>
