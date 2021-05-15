@@ -12,6 +12,7 @@ namespace BookStore.Dependencies
             services.AddMongoDataInfrastrucure();
             services.CreateMongoCollectionsIfNotExist(config);
             services.AddBusinessServices();
+            services.AddEventBus(config);
             services.AddMapping();
             services.AddSwagger();
         }

@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BookCoreLibrary.Domain" Version="1.0.0--16" />
+    <PackageReference Include="BookCoreLibrary.Domain" Version="1.0.0--24" />
+    <PackageReference Include="BookCoreLibrary.EventBus.Core" Version="1.0.0--24" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\" />
   </ItemGroup>
 
 </Project>

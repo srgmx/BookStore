@@ -1,10 +1,14 @@
 ﻿using API.Middleware;
+using BookCoreLibrary.EventBus.Core;
 using BookStore.Dependencies;
 using BookStore.Dependencies.Extensions;
+using BookStore.Domain.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace BookStore.API
@@ -12,6 +16,7 @@ namespace BookStore.API
     public class Startup
     {
         private readonly IConfiguration _config;
+        private IEventBus _eventBus;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -31,14 +36,32 @@ namespace BookStore.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IHostApplicationLifetime lifetime)
         {
+            lifetime.ApplicationStopping.Register(OnStopping);
             app.UseMiddleware<ExceptionsMiddleware>();
             app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();
             app.UseSwaggerTooling();
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            ConfigureSubscriptions(app);
+        }
+
+        private void ConfigureSubscriptions(IApplicationBuilder app)
+        {
+            _eventBus = app.ApplicationServices.GetService<IEventBus>();
+            var queueDestinations = app.ApplicationServices
+                .GetService<IOptions<RabbitMqConsumingConfiguration>>().Value;
+            _eventBus.ConfigureSubscriptions(queueDestinations);
+        }
+
+        private void OnStopping()
+        {
+            _eventBus.UnsubscribeAll();
         }
     }
 }
