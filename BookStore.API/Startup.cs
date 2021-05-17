@@ -1,4 +1,5 @@
 ﻿using API.Middleware;
+using BookCoreLibrary.CorrelationId;
 using BookCoreLibrary.EventBus.Core;
 using BookStore.Dependencies;
 using BookStore.Dependencies.Extensions;
@@ -42,6 +43,7 @@ namespace BookStore.API
             IHostApplicationLifetime lifetime)
         {
             lifetime.ApplicationStopping.Register(OnStopping);
+            app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<ExceptionsMiddleware>();
             app.UseHttpsRedirection();
             app.UseSerilogRequestLogging();

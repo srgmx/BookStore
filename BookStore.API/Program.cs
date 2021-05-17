@@ -2,6 +2,7 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using BookCoreLibrary.CorrelationId;
 
 namespace BookStore.API
 {
@@ -28,7 +29,8 @@ namespace BookStore.API
             Host.CreateDefaultBuilder(args)
                 .UseSerilog((hostContext, loggerConfiguration) => 
                 {
-                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+                    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration)
+                        .Enrich.WithCorrelationIdHeader(CorrelationIdContext.Header);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

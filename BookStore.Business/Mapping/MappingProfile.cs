@@ -53,6 +53,8 @@ namespace BookStore.Business.Mapping
 
             CreateMap<Book, BookDto>();
 
+            CreateMap<OrderCreatedEvent, AckOrderReservedCommand>()
+                .ForMember(d => d.MessageType, o => o.Ignore());
             CreateMap<AckOrderReservedCommand, OrderReservedEvent>()
                 .ForMember(d => d.MessageType, o => o.Ignore());
         }

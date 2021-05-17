@@ -15,6 +15,7 @@ namespace BookStore.Dependencies
             services.AddEventBus(config);
             services.AddMapping();
             services.AddSwagger();
+            services.AddHttpContextAccessor();
         }
     }
 }
